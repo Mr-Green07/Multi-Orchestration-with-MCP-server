@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# Offline AI Agent - Python dependencies
+#
+# Install everything ONCE while online, then the agent runs fully offline.
+# GPU (CUDA) is recommended for 4-bit inference. See README for CPU notes.
+# ---------------------------------------------------------------------------
+
+# --- Core inference stack ---
+torch>=2.2.0                 # install the CUDA build that matches your driver
+transformers>=4.45.0         # Llama 3.2 chat template + generation
+peft>=0.13.0                 # LoRA / QLoRA adapter loading
+accelerate>=0.34.0           # device_map / low-memory loading
+bitsandbytes>=0.43.0         # 4-bit NF4 double quantization (CUDA only)
+
+# --- Local retrieval (RAG) ---
+sentence-transformers>=3.0.0 # local embeddings
+faiss-cpu>=1.8.0             # local vector index (use faiss-gpu if preferred)
+numpy>=1.24.0
+
+# --- Document processing ---
+PyMuPDF>=1.24.0              # PDF text extraction (imported as `fitz`)
+python-docx>=1.1.0           # optional: .docx extraction
+
+# --- Testing ---
+pytest>=8.0.0

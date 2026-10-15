@@ -1,0 +1,9 @@
+{
+  "embed_model": "models/all-MiniLM-L6-v2",
+  "dim": 384,
+  "chunk_size": 800,
+  "overlap": 120,
+  "normalize": true,
+  "num_documents": 2,
+  "num_chunks": 29
+}
