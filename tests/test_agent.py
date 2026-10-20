@@ -6,11 +6,11 @@ recovery and tool-failure recovery. Because the model is scripted, these run
 fully offline with no torch/transformers required.
 """
 
-import security
-import tools
+import old_directory.security as security
+import tools as tools
 from agent_controller import AgentController
 from tools import ToolContext
-from conftest import ScriptedModel, FakeRetriever
+from tests.conftest import ScriptedModel, FakeRetriever
 
 
 def make_agent(responses, ctx=None, max_steps=security.MAX_STEPS):

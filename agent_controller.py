@@ -32,8 +32,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 
-import security
-import tools
+import security as security
+import tools as tools
 from tools import ToolContext
 
 

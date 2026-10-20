@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
-import security
+import security as security
 from security import (
     MAX_LIST_ENTRIES,
     MAX_FILE_BYTES,

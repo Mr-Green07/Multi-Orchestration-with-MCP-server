@@ -4,7 +4,7 @@ import math
 
 import pytest
 
-import security
+import security as security
 from security import SecurityError
 
 

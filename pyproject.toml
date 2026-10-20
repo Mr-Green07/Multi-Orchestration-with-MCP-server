@@ -1,0 +1,17 @@
+[project]
+name = "multi-orchestration-with-mcp-server"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=4.1.1",
+    "psutil>=7.2.2",
+    "pydantic>=2.14.1",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.17.1",
+]

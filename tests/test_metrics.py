@@ -20,10 +20,10 @@ Run with:  pytest -s tests/test_metrics.py   (the -s flag shows the summary)
 
 import time
 
-import security
+import old_directory.security as security
 from agent_controller import AgentController, extract_json, validate_action
 from tools import ToolContext
-from conftest import ScriptedModel, FakeRetriever
+from tests.conftest import ScriptedModel, FakeRetriever
 
 
 def _agent(responses, ctx):

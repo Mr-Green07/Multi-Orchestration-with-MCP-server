@@ -8,7 +8,7 @@ sentence-transformers (or the embedding model) are not available offline.
 
 import pytest
 
-import retrieval
+import old_directory.retrieval as retrieval
 
 
 # --------------------------- pure-python helpers ---------------------------

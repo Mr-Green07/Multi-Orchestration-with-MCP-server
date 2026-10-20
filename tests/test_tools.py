@@ -2,8 +2,8 @@
 
 import pytest
 
-import security
-import tools
+import security as security
+import tools as tools
 from tools import ToolContext, run_tool, validate_arguments, ToolError
 
 
