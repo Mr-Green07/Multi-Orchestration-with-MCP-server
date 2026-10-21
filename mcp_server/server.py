@@ -1,10 +1,34 @@
-from rich import terminal_theme
-from rich import terminal_theme
 from typing import Literal 
 import psutil 
-from mcp.server.fastmcp import FastMCP 
-# pyrefly: ignore[missing-import]
-from schemas import SystemToolResponse
+from fastmcp import FastMCP
+from mcp.types import ToolAnnotations
+from pathlib import Path
+from pydantic import Field
+try:
+    from config import WORKSPACE_JAIL_ROOT
+except ModuleNotFoundError as exc:
+    if exc.name != "config":
+        raise
+    import sys
+
+    project_root = Path(__file__).resolve().parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    from config import WORKSPACE_JAIL_ROOT
+
+try:
+    from mcp_server.tools.hardware_controls import control_hardware, HardwareControlArgs
+except ModuleNotFoundError as exc:
+    if exc.name != "mcp_server":
+        raise
+    from tools.hardware_controls import control_hardware, HardwareControlArgs
+
+
+
+try: 
+    from mcp_server.schemas import SystemToolResponse
+except ImportError:
+    from schemas import SystemToolResponse
 
 mcp = FastMCP("SystemOperatorServer")
 
@@ -18,7 +42,7 @@ def system_telemetry(
         }
 
     elif metric == "memory":
-        mem = payload.virtual_memory()
+        mem = psutil.virtual_memory()
         payload = {
             "total_bytes": mem.total,
             "available_bytes": mem.available,
@@ -27,7 +51,7 @@ def system_telemetry(
         }
 
     elif metric == "disk":
-        disk = psutil.disk_usage("/")
+        disk = psutil.disk_usage(Path.cwd().anchor)
         payload = {
             "total_bytes": disk.total,
             "used_bytes": disk.used,
@@ -37,21 +61,38 @@ def system_telemetry(
 
     else:
         battery = psutil.sensors_battery()
-        payload = {
-            "percentage": battery.percent,
-            "plugged_in": battery.power_plugged,
-            "seconds_left": battery.secsleft,
-        }
+        if battery is None:
+            payload = {
+                "percentage": None,
+                "plugged_in": None,
+                "seconds_left": None,
+            }
+        else:
+            payload = {
+                "percentage": battery.percent,
+                "plugged_in": battery.power_plugged,
+                "seconds_left": battery.secsleft,
+            }
 
     response = SystemToolResponse(
         status = "success", 
         metric_or_action = metric,
+        summary = f"{metric} telemetry retrieved",
         payload = payload
     )
 
     return response.model_dump()
 
 
+@mcp.tool()
+def hardware_control(
+    target: HardwareControlArgs.model_fields["target"].annotation,
+    value: int,
+) -> dict:
+    """Set Windows volume, mute, or brightness."""
+    result = control_hardware(target, value)
+    return result.model_dump()
+
+
 if __name__ == "__main__":
     mcp.run()
-    
