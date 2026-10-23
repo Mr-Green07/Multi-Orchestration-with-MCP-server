@@ -1,20 +1,22 @@
-from typing import Literal 
+from typing import Literal, Optional
 import psutil 
 from fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 from pathlib import Path
 from pydantic import Field
-try:
-    from config import WORKSPACE_JAIL_ROOT
-except ModuleNotFoundError as exc:
-    if exc.name != "config":
-        raise
-    import sys
+from mcp_server.tools.lifecycle import execute_app_lifecycle, AllowedApps
+from mcp_server.tools.workspace import execute_workspace_fs
+# try:
+from config import WORKSPACE_JAIL_ROOT
+# except ModuleNotFoundError as exc:
+#     if exc.name != "config":
+#         raise
+#     import sys
 
-    project_root = Path(__file__).resolve().parent.parent
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
-    from config import WORKSPACE_JAIL_ROOT
+#     project_root = Path(__file__).resolve().parent
+#     if str(project_root) not in sys.path:
+#         sys.path.insert(0, str(project_root))
+#     from config import WORKSPACE_JAIL_ROOT
 
 try:
     from mcp_server.tools.hardware_controls import control_hardware, HardwareControlArgs
@@ -83,16 +85,36 @@ def system_telemetry(
 
     return response.model_dump()
 
+from typing import Literal
+
+HardwareTarget = Literal["volume", "mute", "brightness"]
 
 @mcp.tool()
 def hardware_control(
-    target: HardwareControlArgs.model_fields["target"].annotation,
+    target: HardwareControlArgs.model_fields["target"].annotation, # type: ignore
     value: int,
 ) -> dict:
     """Set Windows volume, mute, or brightness."""
     result = control_hardware(target, value)
     return result.model_dump()
 
+
+@mcp.tool(annotations = {"readOnlyHint": True}) #connecting tool to direct mcp server and call it
+def app_lifecycle(
+    action: Literal["launch", "list_running", "request_kill"],
+    app_name: Optional[AllowedApps] = None,
+    pid: Optional[int] = None
+) -> dict:
+    return execute_app_lifecycle(action, app_name, pid)
+
+@mcp.tool(annotations={"readOnlyHint": False})
+def workspace_fs(
+    action: Literal["list", "read_text", "search"],
+    relative_path: str = "",
+    search_query: Optional[str] = None
+) -> dict:
+    """Safely inspect, read, or search files within the sandboxed workspace folder."""
+    return execute_workspace_fs(action, relative_path, search_query)
 
 if __name__ == "__main__":
     mcp.run()
