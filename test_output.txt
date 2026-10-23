@@ -1,0 +1,17 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.7.0
+rootdir: D:\Student\Multi-Orchestration-with-MCP-server
+configfile: pyproject.toml
+plugins: anyio-4.15.1, platformdirs-4.13.5, asyncio-1.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 5 items
+
+tests\test_mcp_server.py .....                                           [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\_pytest\cacheprovider.py:469
+  D:\Student\Multi-Orchestration-with-MCP-server\.venv\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\Student\Multi-Orchestration-with-MCP-server\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'D:\\Student\\Multi-Orchestration-with-MCP-server\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 5 passed, 1 warning in 2.06s =========================

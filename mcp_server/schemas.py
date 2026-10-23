@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class SystemToolResponse(BaseModel):
     model_config = ConfigDict(extra = "forbid")
-    status: Literal["success", "error", "pending_approval"]
+    status: Literal["success", "error", "pending_approval", "requires_confirmation"]
     metric_or_action: str = Field(
         ...,
         min_length = 1,

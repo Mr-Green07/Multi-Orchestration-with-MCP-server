@@ -1,0 +1,53 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.7.0
+rootdir: D:\Student\Multi-Orchestration-with-MCP-server
+configfile: pyproject.toml
+plugins: anyio-4.15.1, platformdirs-4.13.5, asyncio-1.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 5 items
+
+tests\test_mcp_server.py F.F.F                                           [100%]
+
+================================== FAILURES ===================================
+____________________________ test_tools_discovery _____________________________
+tests\test_mcp_server.py:19: in test_tools_discovery
+    assert expected in tool_names, f"Tool {expected} not found in registered tools."
+E   AssertionError: Tool hardware_controls not found in registered tools.
+E   assert 'hardware_controls' in ['system_telemetry', 'hardware_control', 'app_lifecycle', 'workspace_fs', 'power']
+__________________ test_hardware_controls_bounds_validation ___________________
+tests\test_mcp_server.py:34: in test_hardware_controls_bounds_validation
+    result = await client.call_tool("hardware_controls", {"target": "volume", "value": 150})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:337: in call_tool
+    return await self._parse_call_tool_result(
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:271: in _parse_call_tool_result
+    return await _parse_call_tool_result(
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:374: in _parse_call_tool_result
+    raise ToolError(msg)
+E   fastmcp.exceptions.ToolError: Unknown tool: 'hardware_controls'
+__________________ test_power_session_confirmation_safeguard __________________
+tests\test_mcp_server.py:50: in test_power_session_confirmation_safeguard
+    result = await client.call_tool("power_session", {"action": "shutdown"})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:337: in call_tool
+    return await self._parse_call_tool_result(
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:271: in _parse_call_tool_result
+    return await _parse_call_tool_result(
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:374: in _parse_call_tool_result
+    raise ToolError(msg)
+E   fastmcp.exceptions.ToolError: Unknown tool: 'power_session'
+============================== warnings summary ===============================
+.venv\Lib\site-packages\_pytest\cacheprovider.py:469
+  D:\Student\Multi-Orchestration-with-MCP-server\.venv\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\Student\Multi-Orchestration-with-MCP-server\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'D:\\Student\\Multi-Orchestration-with-MCP-server\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+.venv\Lib\site-packages\_pytest\cacheprovider.py:423
+  D:\Student\Multi-Orchestration-with-MCP-server\.venv\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path D:\Student\Multi-Orchestration-with-MCP-server\.pytest_cache\v\cache\lastfailed: [WinError 5] Access is denied: 'D:\\Student\\Multi-Orchestration-with-MCP-server\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_mcp_server.py::test_tools_discovery - AssertionError: Tool ...
+FAILED tests/test_mcp_server.py::test_hardware_controls_bounds_validation - f...
+FAILED tests/test_mcp_server.py::test_power_session_confirmation_safeguard - ...
+=================== 3 failed, 2 passed, 2 warnings in 2.36s ===================

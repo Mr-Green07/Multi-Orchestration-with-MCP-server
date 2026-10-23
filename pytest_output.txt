@@ -1,0 +1,165 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.7.0
+rootdir: D:\Student\Multi-Orchestration-with-MCP-server
+configfile: pyproject.toml
+plugins: anyio-4.15.1, platformdirs-4.13.5, asyncio-1.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 5 items
+
+tests\test_mcp_server.py F.F.F                                           [100%]
+
+================================== FAILURES ===================================
+____________________________ test_tools_discovery _____________________________
+
+    @pytest.mark.asyncio
+    async def test_tools_discovery():
+        async with Client(mcp) as client:
+            tools = await client.list_tools()
+            tool_names = [tool.name for tool in tools]
+    
+            expected_tools = [
+                "system_telemetry",
+                "hardware_controls",
+                "workspace_fs",
+                "app_lifecycle",
+                "power",
+            ]
+            for expected in expected_tools:
+>               assert expected in tool_names, f"Tool {expected} not found in registered tools."
+E               AssertionError: Tool hardware_controls not found in registered tools.
+E               assert 'hardware_controls' in ['system_telemetry', 'hardware_control', 'app_lifecycle', 'workspace_fs', 'power']
+
+tests\test_mcp_server.py:19: AssertionError
+__________________ test_hardware_controls_bounds_validation ___________________
+
+    @pytest.mark.asyncio
+    async def test_hardware_controls_bounds_validation():
+        """Verify that out-of-bounds hardware inputs return an error status."""
+        async with Client(mcp) as client:
+>           result = await client.call_tool("hardware_controls", {"target": "volume", "value": 150})
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_mcp_server.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:337: in call_tool
+    return await self._parse_call_tool_result(
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:271: in _parse_call_tool_result
+    return await _parse_call_tool_result(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'hardware_controls'
+result = CallToolResult(meta={'io.modelcontextprotocol/serverInfo': {'name': 'SystemOperatorServer', 'version': '4.1.2'}}, cont...l: 'hardware_controls'", annotations=None, meta=None)], structured_content=None, is_error=True, result_type='complete')
+tool_output_schemas = {}
+list_tools_fn = <bound method ClientToolsMixin.list_tools of <fastmcp.client.client.Client object at 0x000001EE19AC5B80>>
+client_name = 'Client-3356', raise_on_error = True
+
+    async def _parse_call_tool_result(
+        name: str,
+        result: mcp_types.CallToolResult,
+        tool_output_schemas: dict[str, dict[str, Any] | None],
+        list_tools_fn: Any,  # Callable[[], Awaitable[None]]
+        client_name: str | None = None,
+        raise_on_error: bool = False,
+    ) -> CallToolResult:
+        """Parse an mcp_types.CallToolResult into our CallToolResult dataclass.
+    
+        Args:
+            name: Tool name (for schema lookup)
+            result: Raw MCP protocol result
+            tool_output_schemas: Dictionary mapping tool names to their output schemas
+            list_tools_fn: Async function to refresh tool schemas if needed
+            client_name: Optional client name for logging
+            raise_on_error: Whether to raise ToolError on errors
+    
+        Returns:
+            CallToolResult: Parsed result with structured data
+        """
+        # Local import: CallToolResult is under TYPE_CHECKING at module level to
+        # avoid a circular import (client.client -> mixins.tools -> client.client),
+        # but we need the concrete class here to construct the return value.
+        from fastmcp.client.client import CallToolResult
+    
+        data = None
+        if result.is_error and raise_on_error:
+            if result.content and isinstance(result.content[0], mcp_types.TextContent):
+                msg = result.content[0].text
+            else:
+                msg = f"Tool '{name}' returned an error"
+>           raise ToolError(msg)
+E           fastmcp.exceptions.ToolError: Unknown tool: 'hardware_controls'
+
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:374: ToolError
+__________________ test_power_session_confirmation_safeguard __________________
+
+    @pytest.mark.asyncio
+    async def test_power_session_confirmation_safeguard():
+        """Verify shutdown actions return requires_confirmation rather than running immediately."""
+        async with Client(mcp) as client:
+>           result = await client.call_tool("power_session", {"action": "shutdown"})
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_mcp_server.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:337: in call_tool
+    return await self._parse_call_tool_result(
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:271: in _parse_call_tool_result
+    return await _parse_call_tool_result(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'power_session'
+result = CallToolResult(meta={'io.modelcontextprotocol/serverInfo': {'name': 'SystemOperatorServer', 'version': '4.1.2'}}, cont... tool: 'power_session'", annotations=None, meta=None)], structured_content=None, is_error=True, result_type='complete')
+tool_output_schemas = {}
+list_tools_fn = <bound method ClientToolsMixin.list_tools of <fastmcp.client.client.Client object at 0x000001EE19A6F050>>
+client_name = 'Client-8a00', raise_on_error = True
+
+    async def _parse_call_tool_result(
+        name: str,
+        result: mcp_types.CallToolResult,
+        tool_output_schemas: dict[str, dict[str, Any] | None],
+        list_tools_fn: Any,  # Callable[[], Awaitable[None]]
+        client_name: str | None = None,
+        raise_on_error: bool = False,
+    ) -> CallToolResult:
+        """Parse an mcp_types.CallToolResult into our CallToolResult dataclass.
+    
+        Args:
+            name: Tool name (for schema lookup)
+            result: Raw MCP protocol result
+            tool_output_schemas: Dictionary mapping tool names to their output schemas
+            list_tools_fn: Async function to refresh tool schemas if needed
+            client_name: Optional client name for logging
+            raise_on_error: Whether to raise ToolError on errors
+    
+        Returns:
+            CallToolResult: Parsed result with structured data
+        """
+        # Local import: CallToolResult is under TYPE_CHECKING at module level to
+        # avoid a circular import (client.client -> mixins.tools -> client.client),
+        # but we need the concrete class here to construct the return value.
+        from fastmcp.client.client import CallToolResult
+    
+        data = None
+        if result.is_error and raise_on_error:
+            if result.content and isinstance(result.content[0], mcp_types.TextContent):
+                msg = result.content[0].text
+            else:
+                msg = f"Tool '{name}' returned an error"
+>           raise ToolError(msg)
+E           fastmcp.exceptions.ToolError: Unknown tool: 'power_session'
+
+.venv\Lib\site-packages\fastmcp\client\mixins\tools.py:374: ToolError
+============================== warnings summary ===============================
+.venv\Lib\site-packages\_pytest\cacheprovider.py:469
+  D:\Student\Multi-Orchestration-with-MCP-server\.venv\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path D:\Student\Multi-Orchestration-with-MCP-server\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'D:\\Student\\Multi-Orchestration-with-MCP-server\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+.venv\Lib\site-packages\_pytest\cacheprovider.py:423
+  D:\Student\Multi-Orchestration-with-MCP-server\.venv\Lib\site-packages\_pytest\cacheprovider.py:423: PytestCacheWarning: could not create cache path D:\Student\Multi-Orchestration-with-MCP-server\.pytest_cache\v\cache\lastfailed: [WinError 5] Access is denied: 'D:\\Student\\Multi-Orchestration-with-MCP-server\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_mcp_server.py::test_tools_discovery - AssertionError: Tool ...
+FAILED tests/test_mcp_server.py::test_hardware_controls_bounds_validation - f...
+FAILED tests/test_mcp_server.py::test_power_session_confirmation_safeguard - ...
+=================== 3 failed, 2 passed, 2 warnings in 2.37s ===================

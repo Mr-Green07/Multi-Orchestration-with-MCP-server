@@ -2,7 +2,7 @@ import sys
 import subprocess 
 from typing import Literal, Optional
 from enum import Enum 
-from schemas import SystemToolResponse
+from mcp_server.schemas import SystemToolResponse
 
 class AllowedApps(str, Enum): #list of applicaiton which are being used for testing in mcp server
     VSCODE = "vscode",

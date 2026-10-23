@@ -6,6 +6,7 @@ from pathlib import Path
 from pydantic import Field
 from mcp_server.tools.lifecycle import execute_app_lifecycle, AllowedApps
 from mcp_server.tools.workspace import execute_workspace_fs
+from mcp_server.tools.power import execute_power_session
 # try:
 from config import WORKSPACE_JAIL_ROOT
 # except ModuleNotFoundError as exc:
@@ -114,7 +115,14 @@ def workspace_fs(
     search_query: Optional[str] = None
 ) -> dict:
     """Safely inspect, read, or search files within the sandboxed workspace folder."""
-    return execute_workspace_fs(action, relative_path, search_query)
+    return execute_workspace_fs(action, relative_path, search_query) # type: ignore
+
+@mcp.tool(annotations={"readOnlyHint": False})
+def power(
+    action: Literal["lock_screen", "sleep", "restart", "shutdown"]
+) -> dict:
+    return execute_power_session(action)
+
 
 if __name__ == "__main__":
     mcp.run()
