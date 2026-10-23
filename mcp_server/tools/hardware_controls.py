@@ -5,12 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-try:
-    from mcp_server.schemas import SystemToolResponse
-except ModuleNotFoundError as exc:
-    if exc.name != "mcp_server":
-        raise
-    from schemas import SystemToolResponse
+from mcp_server.schemas import SystemToolResponse
 
 
 logger = logging.getLogger(__name__)
