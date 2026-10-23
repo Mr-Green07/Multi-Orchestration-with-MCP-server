@@ -19,19 +19,11 @@ from config import WORKSPACE_JAIL_ROOT
 #         sys.path.insert(0, str(project_root))
 #     from config import WORKSPACE_JAIL_ROOT
 
-try:
-    from mcp_server.tools.hardware_controls import control_hardware, HardwareControlArgs
-except ModuleNotFoundError as exc:
-    if exc.name != "mcp_server":
-        raise
-    from tools.hardware_controls import control_hardware, HardwareControlArgs
+from mcp_server.tools.hardware_controls import control_hardware
 
 
 
-try: 
-    from mcp_server.schemas import SystemToolResponse
-except ImportError:
-    from schemas import SystemToolResponse
+from mcp_server.schemas import SystemToolResponse
 
 mcp = FastMCP("SystemOperatorServer")
 
@@ -86,13 +78,11 @@ def system_telemetry(
 
     return response.model_dump()
 
-from typing import Literal
-
 HardwareTarget = Literal["volume", "mute", "brightness"]
 
 @mcp.tool()
 def hardware_control(
-    target: HardwareControlArgs.model_fields["target"].annotation, # type: ignore
+    target: HardwareTarget,
     value: int,
 ) -> dict:
     """Set Windows volume, mute, or brightness."""
