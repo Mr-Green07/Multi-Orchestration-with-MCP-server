@@ -7,39 +7,18 @@ from mcp_server.server import mcp
 
 MODEL_PATH = Path(__file__).resolve().parent.parent / "models" / "Qwen3.5-4BQ" / "model.gguf"
 
-# Strict JSON Schema that forces llama.cpp to only output valid tool calls
-TOOL_CALL_JSON_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "tool": {
-            "type": "string",
-            "enum": [
-                "system_telemetry",
-                "hardware_controls",
-                "app_lifecycle",
-                "workspace_fs",
-                "power_session"
-            ]
-        },
-        "arguments": {
-            "type": "object"
-        }
-    },
-    "required": ["tool", "arguments"],
-    "additionalProperties": False
-}
-
 class SystemAgentOrchestrator:
     def __init__(self):
         if not MODEL_PATH.exists():
             raise FileNotFoundError(f"GGUF model not found at: {MODEL_PATH}")
 
-        print(f"Loading model from {MODEL_PATH.name}...")
+        print(f"Loading model from {MODEL_PATH.name} (optimized for low RAM/VRAM)...")
         self.llm = Llama(
             model_path=str(MODEL_PATH),
-            n_gpu_layers=-1,
-            n_ctx=2048,
-            n_batch=512,
+            n_gpu_layers=-1,      # Offload to GPU
+            n_ctx=1024,           # Tight context window to save RAM/VRAM
+            n_batch=256,          # Smaller batch buffer to reduce memory spike
+            use_mmap=True,        # Memory-map weights from disk instead of duplicating in RAM
             verbose=False
         )
 
@@ -50,16 +29,14 @@ class SystemAgentOrchestrator:
         one_of_schemas = []
 
         for t in tools:
-            schema = t.input_schema
+            schema = t.input_schema # type: ignore
             props = schema.get("properties", {})
             
-            # Build clean human-readable signature for the 4B model
             arg_examples = {}
             for k, v in props.items():
                 if "enum" in v:
                     arg_examples[k] = " | ".join(str(x) for x in v["enum"])
                 elif "anyOf" in v:
-                    # Handle Optional Enums/Types
                     sub_types = [sub.get("type") for sub in v["anyOf"] if sub.get("type") != "null"]
                     arg_examples[k] = f"optional ({'/'.join(filter(None, sub_types))})"
                 else:
@@ -71,8 +48,8 @@ class SystemAgentOrchestrator:
                 f"  Exact Arguments Schema: {json.dumps(arg_examples)}"
             )
 
-            # Build per-tool strict grammar branch so arguments MUST match the tool's exact inputSchema
-            one_of_schemas.append({
+            # Resolve $defs if present inside tool schema (e.g., AllowedApps Enum)
+            tool_branch = {
                 "type": "object",
                 "properties": {
                     "tool": {"type": "string", "const": t.name},
@@ -80,7 +57,8 @@ class SystemAgentOrchestrator:
                 },
                 "required": ["tool", "arguments"],
                 "additionalProperties": False
-            })
+            }
+            one_of_schemas.append(tool_branch)
 
         dynamic_grammar_schema = {
             "type": "object",
@@ -109,12 +87,12 @@ class SystemAgentOrchestrator:
                 temperature=0.0,
                 response_format={
                     "type": "json_object",
-                    "schema": grammar_schema  # Enforces exact FastMCP Pydantic schema at token level!
+                    "schema": grammar_schema
                 }
             )
 
             raw_content = response["choices"][0]["message"]["content"] # type: ignore
-            print(f"[Model Decision]: {raw_content}")
+            print(f"\n[Model Decision]: {raw_content}")
 
             try:
                 decision = json.loads(raw_content) # type: ignore
@@ -122,7 +100,33 @@ class SystemAgentOrchestrator:
                 tool_args = decision.get("arguments", {})
 
                 tool_result = await client.call_tool(tool_name, tool_args)
-                return tool_result.data
+                data = tool_result.data
+
+                # Tier 3 Guardrail: Intercept requires_confirmation responses
+                # if data.get("status") == "requires_confirmation":
+                #     print(f"\n⚠️  [SECURITY GATE]: {data.get('summary')}")
+                #     print(f"⚠️  [WARNING]: {data.get('payload', {}).get('warning')}")
+                #     confirm = input("Approve destructive action? (y/N): ").strip().lower()
+                #     if confirm == "y":
+                #         data["status"] = "confirmed_by_user"
+                #         data["summary"] = f"User approved action: {data.get('metric_or_action')}"
+                #     else:
+                #         data["status"] = "cancelled"
+                #         data["summary"] = f"Action '{data.get('metric_or_action')}' aborted by user."
+                # Tier 3 Guardrail: Intercept requires_confirmation responses
+                if data.get("status") == "requires_confirmation":
+                    token = data.get("confirmation_token")
+                    print(f"\n⚠️  [SECURITY GATE]: {data.get('summary')}")
+                    print(f"⚠️  [WARNING]: {data.get('payload', {}).get('warning')}")
+                    confirm = input("Approve destructive action? (y/N): ").strip().lower()
+                    if confirm == "y" and token:
+                        tool_args["confirmation_token"] = token
+                        confirmed_result = await client.call_tool(tool_name, tool_args)
+                        return confirmed_result.data
+                    else:
+                        data["status"] = "cancelled"
+                        data["summary"] = f"Action '{data.get('metric_or_action')}' aborted by user."
+                return data
 
             except Exception as e:
                 return {
@@ -131,12 +135,28 @@ class SystemAgentOrchestrator:
                     "raw_model_output": raw_content
                 }
 
-async def main():
+async def interactive_loop():
     agent = SystemAgentOrchestrator()
-    
-    print("\n--- Testing Query: 'How much memory is my system using?' ---")
-    result = await agent.execute_query("How much memory is my system using right now?")
-    print(f"[MCP Server Result]: {json.dumps(result, indent=2)}")
+    print("\n=======================================================")
+    print("🤖 System Operator Agent Online (Type 'exit' to quit)")
+    print("=======================================================")
+
+    while True:
+        try:
+            user_input = input("\nYou > ").strip()
+            if not user_input:
+                continue
+            if user_input.lower() in ["exit", "quit"]:
+                print("Shutting down agent...")
+                break
+
+            result = await agent.execute_query(user_input)
+            print(f"[Result ({result.get('status')})]: {result.get('summary')}")
+            print(f"[Payload]: {json.dumps(result.get('payload', {}), indent=2)}")
+
+        except KeyboardInterrupt:
+            print("\nExiting...")
+            break
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(interactive_loop())

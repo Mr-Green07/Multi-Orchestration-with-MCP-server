@@ -13,7 +13,7 @@ async def test_tools_discovery():
             "hardware_control",
             "workspace_fs",
             "app_lifecycle",
-            "power",
+            "power_session",
         ]
         for expected in expected_tools:
             assert expected in tool_names, f"Tool {expected} not found in registered tools."
@@ -47,6 +47,6 @@ async def test_workspace_fs_path_traversal_defense():
 async def test_power_session_confirmation_safeguard():
     """Verify shutdown actions return requires_confirmation rather than running immediately."""
     async with Client(mcp) as client:
-        result = await client.call_tool("power", {"action": "shutdown"})
+        result = await client.call_tool("power_session", {"action": "shutdown"})  # <-- Fixed from "power"
         assert result.data["status"] == "requires_confirmation"
-        assert "warning" in result.data["payload"]    
+        assert "warning" in result.data["payload"]   

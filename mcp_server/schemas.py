@@ -1,4 +1,4 @@
-from typing import Any, Literal
+from typing import Any, Literal, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -19,3 +19,4 @@ class SystemToolResponse(BaseModel):
         min_length=1,
         description="One sentence human readable summary for the tarui UI.",
     )
+    confirmation_token: Optional[str] = None

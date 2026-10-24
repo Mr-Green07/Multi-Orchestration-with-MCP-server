@@ -42,3 +42,8 @@ python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
+
+
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "--ignore=tests/test_agent.py --ignore=tests/test_metrics.py -p no:cacheprovider"

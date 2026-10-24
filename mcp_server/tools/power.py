@@ -1,10 +1,12 @@
 import sys
 import subprocess
-from typing import Literal
+from typing import Literal, Optional
 from mcp_server.schemas import SystemToolResponse
+from mcp_server.security import create_confirmation_token, verify_and_consume_token
 
 def execute_power_session(
-    action: Literal["lock_screen", "sleep", "restart", "shutdown"]
+    action: Literal["lock_screen", "sleep", "restart", "shutdown"],
+    confirmation_token: Optional[str] = None
 ) -> dict: # type: ignore
     try:
         if action == "lock_screen":
@@ -33,33 +35,59 @@ def execute_power_session(
                 subprocess.run(["pmset", "sleepnow"], check=True)
             else:  # Linux systemd sleep
                 subprocess.run(["systemctl", "suspend"], check=True)
+            return SystemToolResponse(
+                            status="success",
+                            metric_or_action="sleep",
+                            summary="System entering sleep mode.",
+                            payload={"action": "sleep"}
+                        ).model_dump()
+        elif action in ["restart", "shutdown"]:
+            # Phase 1 of Confirmation: No token supplied -> issue token and halt
+            if not confirmation_token:
+                token = create_confirmation_token(action, {"target_action": action})
+                return SystemToolResponse(
+                    status="requires_confirmation",
+                    metric_or_action=action,
+                    summary=f"System {action} requested. Requires explicit confirmation.",
+                    payload={
+                        "target_action": action,
+                        "warning": f"Executing {action} will close all active applications."
+                    },
+                    confirmation_token=token # type: ignore
+                ).model_dump()
+
+            # Phase 2 of Confirmation: Verify token and execute
+            verified = verify_and_consume_token(confirmation_token, expected_action=action)
+            if not verified:
+                return SystemToolResponse(
+                    status="error",
+                    metric_or_action=action,
+                    summary="Invalid or expired confirmation token.",
+                    payload={"error": "Confirmation rejected"}
+                ).model_dump()
+
+            # Token verified! Execute actual OS command
+            if sys.platform == "win32":
+                flag = "/r" if action == "restart" else "/s"
+                subprocess.run(["shutdown", flag, "/t", "5"], check=True)
+            else:
+                cmd = "reboot" if action == "restart" else "poweroff"
+                subprocess.run(["systemctl", cmd], check=True)
 
             return SystemToolResponse(
                 status="success",
-                metric_or_action="sleep",
-                summary="System entering sleep mode.",
-                payload={"action": "sleep"}
-            ).model_dump()
-
-        elif action in ["restart", "shutdown"]: #it needs two phase authorization to make changes as it total power off the system.
-            # Tier 3 Guardrail: Destructive actions must never execute without confirmation
-            return SystemToolResponse(
-                status="requires_confirmation", # type: ignore
                 metric_or_action=action,
-                summary=f"System {action} requested. Requires explicit confirmation token before executing.",
-                payload={
-                    "target_action": action,
-                    "warning": f"Executing {action} will terminate active tasks and close all running applications."
-                }
+                summary=f"Confirmed! System {action} initiated (5s grace period).",
+                payload={"action": action, "confirmed": True}
             ).model_dump()
 
-        else:
-            return SystemToolResponse(
-                status="error",
-                metric_or_action="power_session",
-                summary="Unsupported power session action.",
-                payload={"error": "Invalid action"}
-            ).model_dump()
+        return SystemToolResponse(
+            status="error",
+            metric_or_action="power_session",
+            summary="Unsupported power session action.",
+            payload={"error": "Invalid action"}
+        ).model_dump()
+       
 
     except Exception as e:
         return SystemToolResponse(

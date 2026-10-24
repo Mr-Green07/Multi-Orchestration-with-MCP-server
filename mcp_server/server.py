@@ -107,12 +107,13 @@ def workspace_fs(
     """Safely inspect, read, or search files within the sandboxed workspace folder."""
     return execute_workspace_fs(action, relative_path, search_query) # type: ignore
 
-@mcp.tool(annotations={"readOnlyHint": False})
-def power(
-    action: Literal["lock_screen", "sleep", "restart", "shutdown"]
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": True})
+def power_session(
+    action: Literal["lock_screen", "sleep", "restart", "shutdown"],
+    confirmation_token: Optional[str] = None
 ) -> dict:
-    return execute_power_session(action)
-
+    """Control host power and session states (lock, sleep, restart, shutdown)."""
+    return execute_power_session(action, confirmation_token)
 
 if __name__ == "__main__":
     mcp.run()
