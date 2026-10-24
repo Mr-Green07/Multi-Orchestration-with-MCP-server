@@ -1,6 +1,7 @@
 import pytest
 from fastmcp import Client
 from mcp_server.server import mcp
+from mcp_server.security import create_confirmation_token, verify_and_consume_token
 
 @pytest.mark.asyncio
 async def test_tools_discovery():
@@ -49,4 +50,12 @@ async def test_power_session_confirmation_safeguard():
     async with Client(mcp) as client:
         result = await client.call_tool("power_session", {"action": "shutdown"})  # <-- Fixed from "power"
         assert result.data["status"] == "requires_confirmation"
-        assert "warning" in result.data["payload"]   
+        assert "warning" in result.data["payload"]
+
+
+def test_confirmation_token_verification_consumes_token():
+    token = create_confirmation_token("shutdown", {"target_action": "shutdown"})
+    payload = verify_and_consume_token(token, expected_action="shutdown")
+
+    assert payload == {"target_action": "shutdown"}
+    assert verify_and_consume_token(token, expected_action="shutdown") is None

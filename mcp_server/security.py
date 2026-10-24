@@ -1,11 +1,18 @@
-import secrets 
-import time 
-from typing import Any 
+import secrets
+import time
+from typing import Any, TypedDict
 
 
 # In-memory store: {token: {"action": str, "payload": dict, "expires_at": float}}
-_PENDING_CONFIRMATIONS: dict[str, dict[str, Any]] = {}
+class _PendingConfirmation(TypedDict):
+    action: str
+    payload: dict[str, Any]
+    expires_at: float
+
+
+_PENDING_CONFIRMATIONS: dict[str, _PendingConfirmation] = {}
 TOKEN_TTL_SECONDS = 120  # Tokens expire after 2 minutes
+
 
 def create_confirmation_token(action: str, payload: dict[str, Any]) -> str:
     """Create a short-lived one-time token for a Tier 3 destructive action."""
@@ -19,9 +26,10 @@ def create_confirmation_token(action: str, payload: dict[str, Any]) -> str:
     _PENDING_CONFIRMATIONS[token] = {
         "action": action,
         "payload": payload,
-        "expires_at": now + TOKEN_TTL_SECONDS
+        "expires_at": now + TOKEN_TTL_SECONDS,
     }
     return token
+
 
 def verify_and_consume_token(token: str, expected_action: str) -> dict[str, Any] | None:
     """Verify a token is valid, matches the action, and consume it so it cannot be reused."""
