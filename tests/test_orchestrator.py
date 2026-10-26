@@ -1,53 +1,87 @@
+"""Integration: the two-phase confirmation flow through the real MCP server,
+and the backwards-compatible orchestrator shim.
+"""
+from __future__ import annotations
+
 import json
+
 import pytest
-from unittest.mock import MagicMock, patch
+from fastmcp import Client
+
+from agent.llm import ScriptedLLM
+from mcp_server.server import mcp
 from orchestrator.agent import SystemAgentOrchestrator
 
-@pytest.mark.asyncio
-@patch("orchestrator.agent.MODEL_PATH")
-@patch("orchestrator.agent.Llama")
-async def test_orchestrator_routes_telemetry(mock_llama_cls, mock_path):
-    """Verify orchestrator parses LLM JSON decision and calls FastMCP server."""
-    mock_path.exists.return_value = True
-    mock_path.name = "model.gguf"
 
-    mock_llm_instance = MagicMock()
-    mock_llm_instance.create_chat_completion.return_value = {
-        "choices": [{
-            "message": {
-                "content": json.dumps({
-                    "tool": "system_telemetry",
-                    "arguments": {"metric": "cpu"}
-                })
-            }
-        }]
-    }
-    mock_llama_cls.return_value = mock_llm_instance
+def _flag(annotations, name: str):
+    """Read an MCP annotation under either naming convention (SDK v1/v2)."""
+    for attribute in (f"{name}_hint", f"{name}Hint"):
+        if hasattr(annotations, attribute):
+            return getattr(annotations, attribute)
+    return None
 
-    agent = SystemAgentOrchestrator()
-    result = await agent.execute_query("What is my CPU usage?")
-
-    assert result["status"] == "success"
-    assert result["metric_or_action"] == "cpu"
-    assert "usage Percentage" in result["payload"] or "usage_percent" in result["payload"]
 
 @pytest.mark.asyncio
 async def test_two_phase_confirmation_token_flow():
-    """Verify power_session requires a token first, then rejects invalid tokens."""
-    from fastmcp import Client
-    from mcp_server.server import mcp
-
+    """Token first, then a rejected invalid token, then no execution at all."""
     async with Client(mcp) as client:
-        # Step 1: Request shutdown without token
-        res1 = await client.call_tool("power_session", {"action": "shutdown"})
-        assert res1.data["status"] == "requires_confirmation"
-        token = res1.data.get("confirmation_token")
-        assert token is not None
+        first = await client.call_tool("power_session", {"action": "shutdown"})
+        assert first.data["status"] == "requires_confirmation"
+        assert first.data["confirmation_token"]
 
-        # Step 2: Supply a fake token and verify rejection
-        res2 = await client.call_tool(
+        second = await client.call_tool(
             "power_session",
-            {"action": "shutdown", "confirmation_token": "invalid_token_123"}
+            {"action": "shutdown", "confirmation_token": "invalid_token_123"},
         )
-        assert res2.data["status"] == "error"
-        assert "invalid" in res2.data["summary"].lower()
+        assert second.data["status"] == "error"
+        assert "invalid" in second.data["summary"].lower()
+
+
+@pytest.mark.asyncio
+async def test_tools_are_discoverable_and_annotated():
+    async with Client(mcp) as client:
+        tools = {tool.name: tool for tool in await client.list_tools()}
+
+    for expected in ("system_telemetry", "machine_health", "hardware_control",
+                     "app_lifecycle", "workspace_fs", "power_session",
+                     "search_documents", "clipboard"):
+        assert expected in tools, f"{expected} is not published"
+
+    telemetry_annotations = tools["system_telemetry"].annotations
+    assert telemetry_annotations is not None
+    assert _flag(telemetry_annotations, "read_only") is True
+
+    power_annotations = tools["power_session"].annotations
+    assert power_annotations is not None
+    assert _flag(power_annotations, "destructive") is True
+
+
+@pytest.mark.asyncio
+async def test_orchestrator_shim_returns_the_legacy_shape():
+    responses = [
+        json.dumps({"action": "tool", "tool": "system_telemetry",
+                    "arguments": {"metric": "memory"}}),
+        json.dumps({"action": "final", "answer": "Memory is fine."}),
+    ]
+    agent = SystemAgentOrchestrator(llm=ScriptedLLM(responses))
+
+    result = await agent.execute_query("how is memory?")
+
+    assert result["status"] == "success"
+    assert result["answer"] == "Memory is fine."
+    assert result["payload"]["tool_calls"][0]["tool"] == "system_telemetry"
+
+
+@pytest.mark.asyncio
+async def test_orchestrator_against_the_real_server_answers_in_language():
+    responses = [
+        json.dumps({"action": "tool", "tool": "machine_health", "arguments": {}}),
+        json.dumps({"action": "final", "answer": "Everything looks healthy."}),
+    ]
+    agent = SystemAgentOrchestrator(llm=ScriptedLLM(responses))
+
+    result = await agent.execute_query("is my machine okay?")
+
+    assert result["status"] == "success"
+    assert result["payload"]["steps"] == 1
+    assert result["payload"]["tool_calls"][0]["status"] == "success"

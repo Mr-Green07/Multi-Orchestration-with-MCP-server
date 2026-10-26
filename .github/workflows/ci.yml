@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: ["main", "master"]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: ["main", "master"]
 
 jobs:
   test:
@@ -28,11 +28,19 @@ jobs:
           uv sync --all-extras --dev
           uv pip install -e .
 
-      - name: Run Ruff Linter
-        run: uv run ruff check mcp_server --select E9,F63,F7,F82
+      - name: Lint
+        run: uv run ruff check mcp_server agent
 
-      - name: Run Mypy
-        run: uv run mypy mcp_server/ --ignore-missing-imports
+      - name: Type check
+        run: uv run mypy mcp_server agent --ignore-missing-imports
 
-      - name: Run Pytest Suite
-        run: uv run pytest -v tests/test_mcp_server.py
+      - name: Test suite
+        # The full suite: server, tools, policy, audit, orchestrator loop, CLI.
+        # No model or GPU is required - the planner is driven by scripted replies.
+        run: uv run pytest -v tests
+
+      - name: Doctor (non-blocking smoke test)
+        run: uv run python -m agent doctor || true
+
+      - name: Selftest (model-free acceptance checks)
+        run: uv run python -m agent selftest

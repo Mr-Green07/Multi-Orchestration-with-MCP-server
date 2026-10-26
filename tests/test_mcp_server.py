@@ -1,7 +1,9 @@
 import pytest
 from fastmcp import Client
-from mcp_server.server import mcp
+
 from mcp_server.security import create_confirmation_token, verify_and_consume_token
+from mcp_server.server import mcp
+
 
 @pytest.mark.asyncio
 async def test_tools_discovery():

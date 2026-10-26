@@ -19,17 +19,24 @@ The orchestrator discovers the registered MCP tools at runtime, builds a
 tool-specific prompt and strict JSON schema, and calls the selected tool with
 validated arguments.
 
+**New here? Read [`start.md`](start.md).** It is the single source of truth for how
+to install, run and test the project, and it lists every roadmap feature with an
+honest status (working / best-effort / unverifiable on a given host).
+
 ## MCP tools
 
-The server exposes five tools:
+The server publishes 28 tools (run `python -m agent tools` for the live list):
 
-| Tool | Purpose | Supported values |
-| --- | --- | --- |
-| `system_telemetry` | Read system metrics | `cpu`, `memory`, `disk`, `battery` |
-| `hardware_control` | Change Windows hardware settings | `target`: `volume`, `mute`, `brightness`; `value`: `0-100` |
-| `app_lifecycle` | List, launch, or request termination of applications | `action`: `launch`, `list_running`, `request_kill` |
-| `workspace_fs` | Inspect files in the workspace jail | `action`: `list`, `read_text`, `search` |
-| `power` | Lock or change the power state | `action`: `lock_screen`, `sleep`, `restart`, `shutdown` |
+| Group | Tools |
+| --- | --- |
+| Telemetry (read-only) | `system_telemetry`, `machine_health`, `top_processes`, `disk_inventory`, `network_status`, `gpu_status` |
+| Hardware | `hardware_control`, `hardware_undo` |
+| Applications | `app_lifecycle` |
+| Files | `workspace_fs` (jail only, plus opt-in read-only scopes) |
+| Power | `power_session` |
+| Desktop | `clipboard`, `screenshot`, `open_target`, `notify`, `media_control` |
+| Knowledge | `remember`, `recall`, `forget`, `save_profile`, `list_profiles`, `get_profile`, `search_documents`, `index_status` |
+| Awareness / routines | `system_inventory`, `reminders`, `focus_mode`, `organize` |
 
 All tool responses use a structured result containing a status, action or
 metric name, summary, and payload. Destructive operations such as application
@@ -54,16 +61,15 @@ models/Qwen3.5-4BQ/model.gguf
 
 ## Run
 
-Start the MCP server:
+One entry point boots the client with the server in-process:
 
 ```powershell
-python -m mcp_server.server
-```
-
-Run the orchestrator:
-
-```powershell
-python orchestrator/agent.py
+python -m agent            # interactive REPL
+python -m agent run --once "is my machine okay"
+python -m agent doctor     # environment check
+python -m agent tools      # published tools
+python -m agent selftest   # model-free acceptance checks
+python -m agent watch      # reminders + daily health report
 ```
 
 Run the tests:
@@ -71,3 +77,6 @@ Run the tests:
 ```powershell
 pytest
 ```
+
+Full instructions, the feature-status table and troubleshooting live in
+[`start.md`](start.md).

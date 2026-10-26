@@ -1,66 +1,62 @@
-"""
-Retrieval tests.
+"""Retrieval (ask-my-files) tests.
 
-The pure-Python helpers (cleaning, chunking, .txt extraction) always run.
-The full embed+FAISS build/search path is skipped automatically if faiss /
-sentence-transformers (or the embedding model) are not available offline.
+The original suite imported ``old_directory.retrieval``, a package that no longer
+exists. The retrieval capability now lives in ``mcp_server.tools.knowledge`` and
+needs no FAISS or sentence-transformers, so these tests always run.
 """
+from __future__ import annotations
 
 import pytest
 
-import old_directory.retrieval as retrieval
+import config
+from mcp_server.tools import knowledge
 
 
-# --------------------------- pure-python helpers ---------------------------
-def test_clean_text_normalises_whitespace():
-    dirty = "Hello   world\n\n\n\nThis  is\ttext"
-    clean = retrieval.clean_text(dirty)
-    assert "   " not in clean
-    assert "\n\n\n" not in clean
+@pytest.fixture(autouse=True)
+def workspace(tmp_path, monkeypatch):
+    monkeypatch.setattr(config, "WORKSPACE_JAIL_ROOT", tmp_path)
+    knowledge._INDEX_CACHE.update(signature=None, docs=[])
+    (tmp_path / "guide.md").write_text(
+        "Deployment guide. The release train leaves on Friday and rollback uses tags.",
+        encoding="utf-8")
+    (tmp_path / "notes.txt").write_text("Groceries: eggs, milk, flour.", encoding="utf-8")
+    return tmp_path
 
 
-def test_chunk_text_overlap_and_coverage():
-    text = "word " * 500  # 2500 chars
-    chunks = retrieval.chunk_text(text, chunk_size=200, overlap=40)
-    assert len(chunks) > 1
-    assert all(len(c) <= 220 for c in chunks)  # allow small boundary slack
+def test_tokeniser_drops_stopwords():
+    tokens = knowledge._tokens("What is the deployment window?")
+    assert "deployment" in tokens and "the" not in tokens
 
 
-def test_chunk_text_empty():
-    assert retrieval.chunk_text("") == []
+def test_search_finds_the_right_document():
+    result = knowledge.search_documents("rollback")
+    assert result["status"] == "success"
+    assert result["payload"]["matches"][0]["source"] == "guide.md"
 
 
-def test_extract_text_txt(tmp_path):
-    f = tmp_path / "doc.txt"
-    f.write_text("plain content here", encoding="utf-8")
-    assert "plain content" in retrieval.extract_text(f)
+def test_snippet_contains_the_query_context():
+    result = knowledge.search_documents("Friday")
+    snippet = result["payload"]["matches"][0]["snippet"]
+    assert "Friday" in snippet
 
 
-# --------------------------- full pipeline (skips if deps missing) ----------
-def test_build_and_search(tmp_path):
-    pytest.importorskip("faiss")
-    st = pytest.importorskip("sentence_transformers")
-    try:
-        st.SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-    except Exception as exc:  # model not cached / offline
-        pytest.skip(f"embedding model unavailable offline: {exc}")
+def test_search_is_bounded_by_top_k():
+    result = knowledge.search_documents("the", top_k=1)
+    assert len(result["payload"]["matches"]) <= 1
 
-    docs = tmp_path / "docs"
-    docs.mkdir()
-    (docs / "france.txt").write_text(
-        "France is a country in Europe. Its capital city is Paris.", encoding="utf-8")
-    (docs / "japan.txt").write_text(
-        "Japan is an island nation in Asia. Its capital is Tokyo.", encoding="utf-8")
 
-    index_dir = tmp_path / "idx"
-    r = retrieval.Retriever(index_dir=str(index_dir),
-                            embed_model="sentence-transformers/all-MiniLM-L6-v2")
-    stats = r.build(str(docs))
-    assert stats["documents"] == 2
-    r.save()
+def test_index_cache_reuses_results():
+    first = knowledge.index_status()["payload"]["documents"]
+    second = knowledge.index_status()["payload"]["documents"]
+    assert first == second
 
-    loaded = retrieval.Retriever.load(str(index_dir))
-    hits = loaded.search("What is the capital of France?", top_k=1)
-    assert hits
-    assert "Paris" in hits[0]["text"]
-    assert hits[0]["source"] == "france.txt"
+
+def test_missing_query_is_rejected():
+    assert knowledge.search_documents("")["status"] == "error"
+
+
+def test_search_inside_a_subdirectory(workspace):
+    (workspace / "sub").mkdir()
+    (workspace / "sub" / "deep.md").write_text("A deep note about turbines.", encoding="utf-8")
+    result = knowledge.search_documents("turbines", relative_path="sub")
+    assert result["payload"]["matches"][0]["source"] == "deep.md"

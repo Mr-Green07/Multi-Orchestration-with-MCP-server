@@ -27,19 +27,35 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# Directory layout (all paths are relative to this file)
+# Directory layout
+#
+# The jail is NOT defined here any more: it comes from ``config`` so that the MCP
+# tools, the legacy controller and this module all resolve paths against exactly
+# one boundary (previously they could disagree, which meant two jails).
 # ---------------------------------------------------------------------------
-BASE_DIR = Path(__file__).resolve().parent
-WORKSPACE_DIR = BASE_DIR / "workspace"
+try:
+    import config as _config
+
+    BASE_DIR = _config.BASE_DIR
+    WORKSPACE_DIR = _config.WORKSPACE_JAIL_ROOT
+    DATABASE_DIR = _config.DATABASE_DIR
+    LOGS_DIR = _config.LOG_DIR
+except Exception:                                  # standalone import safety
+    BASE_DIR = Path(__file__).resolve().parent
+    WORKSPACE_DIR = BASE_DIR / "workspace"
+    DATABASE_DIR = BASE_DIR / "database"
+    LOGS_DIR = BASE_DIR / "logs"
+
 DOCUMENTS_DIR = BASE_DIR / "documents"
 INDEXES_DIR = BASE_DIR / "indexes"
-DATABASE_DIR = BASE_DIR / "database"
-LOGS_DIR = BASE_DIR / "logs"
 MODELS_DIR = BASE_DIR / "models"
 ADAPTERS_DIR = BASE_DIR / "adapters"
 
 for _d in (WORKSPACE_DIR, DOCUMENTS_DIR, INDEXES_DIR, DATABASE_DIR, LOGS_DIR):
-    _d.mkdir(parents=True, exist_ok=True)
+    try:
+        _d.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
 
 # ---------------------------------------------------------------------------
 # Global limits / policy knobs
