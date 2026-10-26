@@ -6,11 +6,11 @@ recovery and tool-failure recovery. Because the model is scripted, these run
 fully offline with no torch/transformers required.
 """
 
-import old_directory.security as security
+import security as security
 import tools as tools
 from agent_controller import AgentController
+from tests.conftest import FakeRetriever, ScriptedModel
 from tools import ToolContext
-from tests.conftest import ScriptedModel, FakeRetriever
 
 
 def make_agent(responses, ctx=None, max_steps=security.MAX_STEPS):
@@ -80,7 +80,7 @@ def test_e2e_sqlite(ctx):
 
 # --------------------------- 6. report generation ---------------------------
 def test_e2e_report():
-    fname = "_pytest_e2e_report.md"
+    fname = "pytest_e2e_report.md"
     target = security.WORKSPACE_DIR / fname
     try:
         agent, _ = make_agent([

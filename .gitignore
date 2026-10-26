@@ -221,3 +221,13 @@ __marimo__/
 models/
 old_directory/
 
+
+# Agent runtime artifacts (local state, never shared)
+logs/
+database/*.db
+database/*.db-journal
+workspace/*
+!workspace/.gitkeep
+pytest_output.txt
+pytest_results.txt
+test_output.txt
