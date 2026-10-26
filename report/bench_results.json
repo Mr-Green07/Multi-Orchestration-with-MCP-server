@@ -1,0 +1,190 @@
+{
+  "environment": {
+    "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+    "python": "3.11.2",
+    "cpu_count": 2,
+    "ram_gb": 3.85
+  },
+  "telemetry": {
+    "cpu": {
+      "n": 60,
+      "mean_ms": 100.3859,
+      "p50_ms": 100.3687,
+      "p95_ms": 100.4957,
+      "max_ms": 100.7286
+    },
+    "memory": {
+      "n": 200,
+      "mean_ms": 0.028,
+      "p50_ms": 0.0255,
+      "p95_ms": 0.0428,
+      "max_ms": 0.1206
+    },
+    "disk": {
+      "n": 200,
+      "mean_ms": 0.0024,
+      "p50_ms": 0.0024,
+      "p95_ms": 0.0026,
+      "max_ms": 0.0029
+    },
+    "battery": {
+      "n": 200,
+      "mean_ms": 0.0036,
+      "p50_ms": 0.0032,
+      "p95_ms": 0.0047,
+      "max_ms": 0.0259
+    },
+    "process_scan": {
+      "n": 60,
+      "mean_ms": 3.1945,
+      "p50_ms": 3.1704,
+      "p95_ms": 3.4948,
+      "max_ms": 4.1084
+    }
+  },
+  "workspace": {
+    "list": {
+      "n": 200,
+      "mean_ms": 0.2008,
+      "p50_ms": 0.1882,
+      "p95_ms": 0.255,
+      "max_ms": 0.3615
+    },
+    "read_text": {
+      "n": 200,
+      "mean_ms": 0.0602,
+      "p50_ms": 0.0553,
+      "p95_ms": 0.0933,
+      "max_ms": 0.1168
+    },
+    "search": {
+      "n": 60,
+      "mean_ms": 0.4385,
+      "p50_ms": 0.435,
+      "p95_ms": 0.5535,
+      "max_ms": 0.6614
+    },
+    "traversal_reject": {
+      "n": 200,
+      "mean_ms": 0.0477,
+      "p50_ms": 0.0437,
+      "p95_ms": 0.077,
+      "max_ms": 0.1908
+    }
+  },
+  "app_lifecycle": {
+    "list_running": {
+      "n": 60,
+      "mean_ms": 3.5466,
+      "p50_ms": 3.4439,
+      "p95_ms": 4.1259,
+      "max_ms": 6.3921
+    },
+    "request_kill_denied": {
+      "n": 200,
+      "mean_ms": 0.0035,
+      "p50_ms": 0.0033,
+      "p95_ms": 0.0035,
+      "max_ms": 0.0238
+    }
+  },
+  "confirmation": {
+    "issue": {
+      "n": 200,
+      "mean_ms": 0.0118,
+      "p50_ms": 0.0049,
+      "p95_ms": 0.008,
+      "max_ms": 1.375
+    },
+    "verify_ok": {
+      "n": 200,
+      "mean_ms": 0.0084,
+      "p50_ms": 0.008,
+      "p95_ms": 0.009,
+      "max_ms": 0.0302
+    },
+    "verify_replay": {
+      "n": 200,
+      "mean_ms": 0.0002,
+      "p50_ms": 0.0002,
+      "p95_ms": 0.0002,
+      "max_ms": 0.0003
+    },
+    "verify_tampered": {
+      "n": 200,
+      "mean_ms": 0.0003,
+      "p50_ms": 0.0003,
+      "p95_ms": 0.0003,
+      "max_ms": 0.0004
+    }
+  },
+  "schema": {
+    "model_dump": {
+      "n": 500,
+      "mean_ms": 0.0032,
+      "p50_ms": 0.0028,
+      "p95_ms": 0.0045,
+      "max_ms": 0.0356
+    }
+  },
+  "dispatch": {
+    "dispatch_calculate": {
+      "n": 500,
+      "mean_ms": 0.1253,
+      "p50_ms": 0.1183,
+      "p95_ms": 0.1593,
+      "max_ms": 0.7729
+    },
+    "validate_reject_bad_arg": {
+      "n": 500,
+      "mean_ms": 0.0015,
+      "p50_ms": 0.0014,
+      "p95_ms": 0.0015,
+      "max_ms": 0.0233
+    },
+    "validate_reject_unknown_tool": {
+      "n": 500,
+      "mean_ms": 0.0006,
+      "p50_ms": 0.0006,
+      "p95_ms": 0.0007,
+      "max_ms": 0.0009
+    }
+  },
+  "controller": {
+    "parse_clean": {
+      "n": 1000,
+      "mean_ms": 0.0064,
+      "p50_ms": 0.0058,
+      "p95_ms": 0.0094,
+      "max_ms": 0.1197
+    },
+    "parse_noisy_fenced": {
+      "n": 1000,
+      "mean_ms": 0.0061,
+      "p50_ms": 0.0058,
+      "p95_ms": 0.0062,
+      "max_ms": 0.0553
+    },
+    "parse_malformed_graceful": {
+      "n": 1000,
+      "mean_ms": 0.0017,
+      "p50_ms": 0.0015,
+      "p95_ms": 0.0022,
+      "max_ms": 0.0267
+    },
+    "safe_eval": {
+      "n": 1000,
+      "mean_ms": 0.0082,
+      "p50_ms": 0.0078,
+      "p95_ms": 0.0083,
+      "max_ms": 0.04
+    },
+    "path_traversal_guard": {
+      "n": 1000,
+      "mean_ms": 0.0035,
+      "p50_ms": 0.0032,
+      "p95_ms": 0.0055,
+      "max_ms": 0.033
+    }
+  }
+}
