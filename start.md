@@ -199,9 +199,51 @@ What the suite covers (all hermetic — temp dirs, mocked hardware, scripted mod
 | `tests/test_orchestrator.py` | prompts, grammar schema, annotations, contract vs README |
 | `tests/test_cli_doctor.py` | doctor checks, slash commands, formatting |
 | `tests/test_agent.py`, `test_tools.py`, `test_metrics.py` | the legacy controller and tool suite |
+| `tests/test_scientific_core.py` | metadata schema, stemmer, PDF extractor, chunking, index, embeddings, evidence |
+| `tests/test_scientific_retrieval.py` | BM25/dense/hybrid, fusion, expansion, reranking, retrieval agent, recall@k |
+| `tests/test_scientific_agents.py` | each specialist agent, validation, handoffs, tracing |
+| `tests/test_scientific_evaluation.py` | benchmark loading, metrics, judge, bootstrap, report rendering |
+| `tests/test_scientific_product.py` | CLI subcommands, live HTTP API round-trips, end-to-end and determinism |
 
 CI (`.github/workflows/ci.yml`) runs lint → type check → full pytest → doctor →
 selftest on Python 3.12.
+
+---
+
+## 5b. The scientific RAG package
+
+`start.md` would be lying if it stopped at the system agent. This repository also
+ships `scientific_llm/`, a self-contained offline scientific RAG stack. It needs
+nothing beyond the standard library.
+
+```bash
+python -m scientific_llm ingest data/scientific_corpus   # 10 papers -> SQLite index
+python -m scientific_llm stats
+python -m scientific_llm search "hybrid retrieval fusion" --k 5
+python -m scientific_llm ask "How does position bias affect the reranker?"
+python -m scientific_llm trace "what is BM25?" --out trace.json
+python -m scientific_llm evaluate --compare               # 3 systems + bootstrap
+python -m scientific_llm benchmark                        # reports/benchmark_report.md
+python -m scientific_llm serve --port 8017                # JSON HTTP API
+python -m scientific_llm demo                             # one-shot smoke test
+bash scripts/reproduce.sh                                 # lint, types, tests, benchmark, determinism
+```
+
+| Item | Status | Notes |
+| --- | --- | --- |
+| Ingestion (markdown / text / PDF / arXiv / Crossref) | Working / verified | PDF works with or without `pypdf` (built-in extractor) |
+| Section-aware chunking + persistent index | Working / verified | 220/45/40 tokens, SQLite, `scirag-index-1` |
+| Hybrid retrieval (BM25 + hashing dense + RRF) | Working / verified | recall@10 0.78 vs 0.61 BM25, 0.66 dense |
+| Query expansion, reranking, retrieval agent | Working / verified | acronym + thesaurus expansion, 5-signal reranker |
+| Six specialist agents + typed handoffs + tracing | Working / verified | every printed line carries an `[E n]` marker |
+| Citation validator | Working / verified | drops 71% of unsupported claims, 4% of supported |
+| Benchmark, baselines, metrics, paired bootstrap | Working / verified | 20 questions, 2000 resamples, seed 1234 |
+| CLI, HTTP API, end-to-end tests, repro scripts | Working / verified | 22 tests in `tests/test_scientific_product.py` |
+| Generative synthesiser | **Not implemented (by design)** | extractive only, so faithfulness numbers are optimistic |
+| Wiring into the MCP tool server | **Not implemented** | separate package, `mcp_server/` untouched |
+
+Full reference: [`SCIENTIFIC_LLM.md`](SCIENTIFIC_LLM.md). Latest run:
+[`reports/benchmark_report.md`](reports/benchmark_report.md).
 
 ---
 
@@ -342,6 +384,10 @@ are implemented but **must be confirmed on your Windows PC**:
    covered by tests; *answer quality* is not.
 7. Battery guard, window list, journald/Event Log access — no battery, no X server,
    no journal permissions here.
+8. Scientific RAG on *your* PDFs — the 10 bundled papers are clean digital text with
+   consistent headings. Scanned papers, two-column layouts and exotic fonts are the
+   first thing to break section detection. `pypdf` (if installed) does the heavy
+   lifting; without it the built-in extractor only reads uncompressed/Flate streams.
 
 Run `python -m agent doctor` on your machine: it turns every one of these into a
 pass/fail line.
@@ -422,7 +468,11 @@ orchestrator/agent.py   compatibility shim over the one real loop
 agent_controller.py     legacy controller, kept for its JSON extraction helpers
 config.py               every knob, cap and path in one place
 security.py             legacy logger/path layer, now sharing the single jail
-tests/                  274 hermetic tests
+scientific_llm/         the offline scientific RAG package (see SCIENTIFIC_LLM.md)
+data/scientific_corpus/ 10 bundled papers; data/benchmark/questions.json
+scripts/                build_corpus.py, run_benchmark.py, reproduce.sh, make_sample_pdf.py
+reports/                generated benchmark report, summary JSON, per-row JSONL
+tests/                  hermetic tests for both packages
 start.md                this file
 FEATURE_ROADMAP.md      the specification these features came from
 ```

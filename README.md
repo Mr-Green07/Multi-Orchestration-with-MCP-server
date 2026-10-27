@@ -19,6 +19,26 @@ The orchestrator discovers the registered MCP tools at runtime, builds a
 tool-specific prompt and strict JSON schema, and calls the selected tool with
 validated arguments.
 
+## Scientific RAG (`scientific_llm`)
+
+A second, independent package: offline scientific-paper retrieval, hybrid search,
+specialist agents with citation validation, and a three-system benchmark with
+paired statistics. No model download, no API key, no third-party runtime dependency.
+
+```bash
+python -m scientific_llm demo      # index 10 papers, answer one question
+python -m scientific_llm ask "How does citation validation reduce unsupported claims?"
+python -m scientific_llm evaluate --compare
+python -m scientific_llm serve --port 8017
+```
+
+20-question benchmark, k=5: relevance 0.617 (conventional RAG) → 0.729 (single
+agent) → **0.783** (multi-agent), at 5.4 → 7.4 → 16.6 ms; relevance gain is
+significant under a paired bootstrap (+0.167, 95% CI [+0.067, +0.283], p<0.001),
+faithfulness is 1.000 for all three because the synthesiser is extractive. Design, per-requirement map and threats to validity:
+[`SCIENTIFIC_LLM.md`](SCIENTIFIC_LLM.md) and
+[`reports/benchmark_report.md`](reports/benchmark_report.md).
+
 **New here? Read [`start.md`](start.md).** It is the single source of truth for how
 to install, run and test the project, and it lists every roadmap feature with an
 honest status (working / best-effort / unverifiable on a given host).
