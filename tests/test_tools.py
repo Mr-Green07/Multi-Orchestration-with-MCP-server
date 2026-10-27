@@ -4,7 +4,7 @@ import pytest
 
 import security as security
 import tools as tools
-from tools import ToolContext, run_tool, validate_arguments, ToolError
+from tools import ToolContext, ToolError, run_tool, validate_arguments
 
 
 # --------------------------- argument validation ---------------------------
@@ -126,7 +126,7 @@ def test_sqlite_call_limit(ctx):
 
 # --------------------------- report tool ---------------------------
 def test_create_report_and_overwrite_guard():
-    fname = "_pytest_report.md"
+    fname = "pytest_report.md"
     target = security.WORKSPACE_DIR / fname
     try:
         res = run_tool("create_report",

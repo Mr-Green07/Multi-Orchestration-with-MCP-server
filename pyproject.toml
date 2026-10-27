@@ -4,46 +4,51 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "multi-orchestration-with-mcp-server"
-version = "0.1.0"
-requires-python = ">=3.12"
+version = "1.0.0"
+description = "Offline, guarded system-operations agent: local LLM + FastMCP tool server"
+requires-python = ">=3.10"
 dependencies = [
     "fastmcp>=4.1.2",
     "psutil>=7.2.2",
     "pydantic>=2.14.1",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
+# Needed only for free-form (model-driven) requests. The tool server, the CLI's
+# slash commands, the doctor and the whole test suite work without it.
+llm = ["llama-cpp-python>=0.2.90"]
+# Optional desktop backends.
+desktop = ["pillow>=10.0.0"]
 dev = [
-    "mypy>=2.4.0",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "ruff>=0.17.1",
+    "mypy>=1.11.0",
 ]
 
-[tool.setuptools]
-packages = ["mcp_server", "mcp_server.tools"]
-py-modules = ["config", "security", "tools"]
+[project.scripts]
+agent = "agent.cli:main"
 
+[tool.setuptools]
+packages = ["agent", "mcp_server", "mcp_server.tools", "orchestrator"]
+py-modules = ["config", "security", "tools", "agent_controller"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+addopts = "-q"
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
-ignore = []
+ignore = ["E501"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
-
-
-asyncio_mode = "auto"
-testpaths = ["tests"]
-addopts = "--ignore=tests/test_agent.py --ignore=tests/test_metrics.py -p no:cacheprovider"
+ignore_missing_imports = true

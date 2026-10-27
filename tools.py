@@ -20,20 +20,21 @@ from __future__ import annotations
 import json
 import sqlite3
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any
 
 import security as security
 from security import (
-    MAX_LIST_ENTRIES,
     MAX_FILE_BYTES,
+    MAX_LIST_ENTRIES,
     MAX_OUTPUT_CHARS,
     MAX_SQL_CALLS,
     MAX_SQL_ROWS,
     MAX_TOOL_SECONDS,
-    SecurityError,
     TEXT_FILE_EXTENSIONS,
+    SecurityError,
 )
 
 
@@ -54,7 +55,7 @@ class ToolContext:
     * ``logger``     -- shared logger
     """
     retriever: Any = None
-    db_path: Optional[str] = None
+    db_path: str | None = None
     confirm: Callable[[str], bool] = field(default=lambda _msg: False)
     logger: Any = None
     _sql_calls: int = 0
@@ -84,10 +85,10 @@ def _type_ok(value: Any, expected: str) -> bool:
     if expected == "boolean":
         return isinstance(value, bool)
     py = _PY_TYPES.get(expected)
-    return isinstance(value, py) if py else False
+    return bool(py) and isinstance(value, py)   # type: ignore[arg-type]
 
 
-def validate_arguments(schema: Dict[str, dict], arguments: Any) -> Dict[str, Any]:
+def validate_arguments(schema: dict[str, dict], arguments: Any) -> dict[str, Any]:
     """Validate *arguments* against *schema*, returning a clean dict.
 
     Schema entry format: ``{"type": "string", "required": True, "default": ...}``
@@ -97,7 +98,7 @@ def validate_arguments(schema: Dict[str, dict], arguments: Any) -> Dict[str, Any
     if not isinstance(arguments, dict):
         raise ToolError("The 'arguments' field must be a JSON object.")
 
-    validated: Dict[str, Any] = {}
+    validated: dict[str, Any] = {}
     for key, spec in schema.items():
         if key in arguments and arguments[key] is not None:
             value = arguments[key]
@@ -114,18 +115,18 @@ def validate_arguments(schema: Dict[str, dict], arguments: Any) -> Dict[str, Any
 # ---------------------------------------------------------------------------
 # Uniform result helpers
 # ---------------------------------------------------------------------------
-def _ok(result: Any) -> Dict[str, Any]:
+def _ok(result: Any) -> dict[str, Any]:
     return {"ok": True, "result": result}
 
 
-def _err(message: str) -> Dict[str, Any]:
+def _err(message: str) -> dict[str, Any]:
     return {"ok": False, "error": message}
 
 
 # ===========================================================================
 # Tool implementations
 # ===========================================================================
-def _tool_calculate(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]:
+def _tool_calculate(args: dict[str, Any], ctx: ToolContext) -> dict[str, Any]:
     expression = args["expression"]
     try:
         value = security.safe_eval(expression)
@@ -141,7 +142,7 @@ def _tool_calculate(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]:
     return _ok({"expression": expression, "value": value})
 
 
-def _tool_list_files(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]:
+def _tool_list_files(args: dict[str, Any], ctx: ToolContext) -> dict[str, Any]:
     subdir = args.get("subdir") or "."
     try:
         target = security.resolve_in_workspace(subdir)
@@ -171,7 +172,7 @@ def _tool_list_files(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]:
     return _ok({"directory": str(rel) if str(rel) != "." else "workspace/", "entries": entries})
 
 
-def _tool_read_text_file(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]:
+def _tool_read_text_file(args: dict[str, Any], ctx: ToolContext) -> dict[str, Any]:
     path = args["path"]
     try:
         target = security.resolve_in_workspace(path)
@@ -205,7 +206,7 @@ def _tool_read_text_file(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, An
     })
 
 
-def _tool_search_documents(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]:
+def _tool_search_documents(args: dict[str, Any], ctx: ToolContext) -> dict[str, Any]:
     query = args["query"]
     top_k = args.get("top_k") or 4
     top_k = max(1, min(int(top_k), 10))
@@ -228,7 +229,7 @@ def _tool_search_documents(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, 
     return _ok({"query": query, "matches": matches})
 
 
-def _tool_query_sqlite(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]:
+def _tool_query_sqlite(args: dict[str, Any], ctx: ToolContext) -> dict[str, Any]:
     query = args["query"]
 
     if ctx._sql_calls >= MAX_SQL_CALLS:
@@ -287,7 +288,7 @@ def _tool_query_sqlite(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]
             conn.close()
 
 
-def _tool_create_report(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any]:
+def _tool_create_report(args: dict[str, Any], ctx: ToolContext) -> dict[str, Any]:
     filename = security.sanitize_filename(args["filename"])
     title = args.get("title")
     content = args.get("content")
@@ -340,11 +341,11 @@ def _tool_create_report(args: Dict[str, Any], ctx: ToolContext) -> Dict[str, Any
 class Tool:
     name: str
     description: str
-    schema: Dict[str, dict]
-    func: Callable[[Dict[str, Any], ToolContext], Dict[str, Any]]
+    schema: dict[str, dict]
+    func: Callable[[dict[str, Any], ToolContext], dict[str, Any]]
 
 
-TOOLS: Dict[str, Tool] = {
+TOOLS: dict[str, Tool] = {
     "calculate": Tool(
         name="calculate",
         description="Evaluate a safe arithmetic expression (e.g. '25 * 4', 'sqrt(2) + log(10)').",
@@ -403,8 +404,6 @@ def describe_tools() -> str:
     """Human/LLM-readable description of the registry (used in the system prompt)."""
     out = []
     for i, tool in enumerate(TOOLS.values(), start=1):
-        required = [k for k, s in tool.schema.items() if s.get("required")]
-        optional = [k for k, s in tool.schema.items() if not s.get("required")]
         arg_bits = []
         for k, s in tool.schema.items():
             tag = "required" if s.get("required") else "optional"
@@ -416,7 +415,7 @@ def describe_tools() -> str:
     return "\n".join(out)
 
 
-def run_tool(name: str, arguments: Any, ctx: ToolContext) -> Dict[str, Any]:
+def run_tool(name: str, arguments: Any, ctx: ToolContext) -> dict[str, Any]:
     """Validate + execute a tool by *name*, enforcing a wall-clock timeout.
 
     Never raises: any failure is returned as ``{"ok": False, "error": ...}``.
@@ -432,7 +431,7 @@ def run_tool(name: str, arguments: Any, ctx: ToolContext) -> Dict[str, Any]:
 
     import threading
 
-    holder: Dict[str, Any] = {}
+    holder: dict[str, Any] = {}
 
     def _target():
         try:
@@ -447,10 +446,12 @@ def run_tool(name: str, arguments: Any, ctx: ToolContext) -> Dict[str, Any]:
     thread.join(MAX_TOOL_SECONDS + 1.0)  # +1s grace over the tool's own budget
     if thread.is_alive():
         return _err(f"Tool '{name}' timed out after {MAX_TOOL_SECONDS} seconds.")
-    return holder.get("value", _err(f"Tool '{name}' returned no result."))
+    result = holder.get("value")
+    return result if isinstance(result, dict) else _err(
+        f"Tool '{name}' returned no result.")
 
 
-def result_to_text(result: Dict[str, Any]) -> str:
+def result_to_text(result: dict[str, Any]) -> str:
     """Compact, size-capped string form of a tool result for the model."""
     try:
         payload = json.dumps(result, ensure_ascii=False, default=str)

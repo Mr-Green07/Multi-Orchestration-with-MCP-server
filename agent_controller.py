@@ -28,9 +28,9 @@ Design notes
 from __future__ import annotations
 
 import json
-import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, cast
 
 import security as security
 import tools as tools
@@ -153,9 +153,9 @@ class AgentResult:
     answer: str
     steps: int
     exhausted: bool = False
-    error: Optional[str] = None
-    trace: List[dict] = field(default_factory=list)
-    tool_calls: List[dict] = field(default_factory=list)
+    error: str | None = None
+    trace: list[dict] = field(default_factory=list)
+    tool_calls: list[dict] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -164,7 +164,7 @@ class AgentResult:
 class AgentController:
     def __init__(
         self,
-        generate_fn: Callable[[List[dict]], str],
+        generate_fn: Callable[[list[dict]], str],
         ctx: ToolContext,
         logger=None,
         max_steps: int = security.MAX_STEPS,
@@ -177,7 +177,7 @@ class AgentController:
         self.max_steps = max_steps
         self.show_tools = show_tools
         self.max_history_messages = max_history_messages
-        self.history: List[dict] = []  # persisted user/assistant turns across requests
+        self.history: list[dict] = []  # persisted user/assistant turns across requests
 
     # -- history management --
     def clear(self) -> None:
@@ -192,15 +192,15 @@ class AgentController:
         self.ctx.reset_counters()
         self.logger.info("USER_REQUEST: %s", user_input)
 
-        messages: List[dict] = (
+        messages: list[dict] = (
             [{"role": "system", "content": build_system_prompt()}]
             + list(self.history)
             + [{"role": "user", "content": user_input}]
         )
 
-        trace: List[dict] = []
-        tool_calls: List[dict] = []
-        last_error: Optional[str] = None
+        trace: list[dict] = []
+        tool_calls: list[dict] = []
+        last_error: str | None = None
 
         step = 0
         while step < self.max_steps:
@@ -212,8 +212,9 @@ class AgentController:
             except Exception as exc:
                 friendly = self._handle_generation_error(exc)
                 self.logger.error("GENERATION_ERROR (step %d): %s", step, exc)
-                return self._finish(user_input, friendly, step, trace, tool_calls,
-                                    exhausted=False, error=str(exc))
+                return cast("AgentResult", self._finish(
+                    user_input, friendly, step, trace, tool_calls,
+                    exhausted=False, error=str(exc)))
 
             raw = raw or ""
             self.logger.info("MODEL_RESPONSE (step %d): %s", step, security.truncate(raw, 1000))
@@ -253,7 +254,8 @@ class AgentController:
             # --- final answer ---
             if kind == "final":
                 self.logger.info("FINAL_ANSWER (step %d): %s", step, security.truncate(payload, 1000))
-                return self._finish(user_input, payload, step, trace, tool_calls, exhausted=False)
+                return cast("AgentResult", self._finish(
+                    user_input, payload, step, trace, tool_calls, exhausted=False))
 
             # --- tool call ---
             tool_name = payload["tool"]
@@ -286,8 +288,9 @@ class AgentController:
         if last_error:
             fallback += f" Last issue: {last_error}."
         self.logger.warning("MAX_STEPS_EXCEEDED: %s", fallback)
-        return self._finish(user_input, fallback, step, trace, tool_calls,
-                            exhausted=True, error=last_error)
+        return cast("AgentResult", self._finish(
+            user_input, fallback, step, trace, tool_calls,
+            exhausted=True, error=last_error))
 
     # -- helpers --
     def _finish(self, user_input, answer, steps, trace, tool_calls, exhausted, error=None):

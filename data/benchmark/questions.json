@@ -1,0 +1,166 @@
+{
+  "name": "scientific_rag_benchmark_v1",
+  "description": "20 questions over the bundled 10-paper corpus. gold_docs are doc_id prefixes; the runner resolves them against the live index. Categories: factual, comparison, methodology, gap, multi_hop.",
+  "questions": [
+    {
+      "id": "q01",
+      "question": "How much does hybrid retrieval improve recall at ten over BM25 alone?",
+      "category": "factual",
+      "gold_docs": ["dense-and-hybrid-retrieval"],
+      "key_points": ["recall at ten", "0.78", "0.61", "BM25"],
+      "notes": "Single-paper numeric question; the number must be quoted, not paraphrased."
+    },
+    {
+      "id": "q02",
+      "question": "What fusion method do the hybrid retrieval authors use for their ranked lists?",
+      "category": "factual",
+      "gold_docs": ["dense-and-hybrid-retrieval"],
+      "key_points": ["reciprocal rank fusion"],
+      "notes": "Terminology recall question."
+    },
+    {
+      "id": "q03",
+      "question": "What latency does full cross-encoder reranking cost compared with a pruned cascade?",
+      "category": "comparison",
+      "gold_docs": ["cross-encoder-reranking"],
+      "key_points": ["310 ms", "74 ms", "median latency"],
+      "notes": "Two numbers from one paper's results section."
+    },
+    {
+      "id": "q04",
+      "question": "How many candidates should a cascade keep before reranking?",
+      "category": "methodology",
+      "gold_docs": ["cross-encoder-reranking"],
+      "key_points": ["forty", "40", "candidates"],
+      "notes": "Operating-point question."
+    },
+    {
+      "id": "q05",
+      "question": "What is the unsupported-claim rate of the multi-agent system compared with single-call RAG?",
+      "category": "comparison",
+      "gold_docs": ["multi-agent-decomposition"],
+      "key_points": ["0.06", "0.29", "unsupported"],
+      "notes": "Headline comparison of the multi-agent paper."
+    },
+    {
+      "id": "q06",
+      "question": "Which agents does the coordinator hand off to in the multi-agent pipeline?",
+      "category": "methodology",
+      "gold_docs": ["multi-agent-decomposition"],
+      "key_points": ["retrieval", "evidence", "methodology", "gap", "citation validator", "synthesis"],
+      "notes": "Architecture question; expects the agent list."
+    },
+    {
+      "id": "q07",
+      "question": "How much does citation validation reduce unsupported citations?",
+      "category": "factual",
+      "gold_docs": ["citation-validation"],
+      "key_points": ["71 percent", "unsupported citations", "4 percent"],
+      "notes": "Requires the two-sided result (removed vs retained)."
+    },
+    {
+      "id": "q08",
+      "question": "What token overlap threshold does the citation validator use for claim support?",
+      "category": "methodology",
+      "gold_docs": ["citation-validation"],
+      "key_points": ["0.45", "threshold", "token overlap"],
+      "notes": "Implementation detail; tests whether the methods section is retrieved."
+    },
+    {
+      "id": "q09",
+      "question": "How does section-aware chunking improve recall for limitation statements?",
+      "category": "factual",
+      "gold_docs": ["section-aware-chunking"],
+      "key_points": ["0.42", "0.61", "limitation"],
+      "notes": "Numeric result with a before/after pair."
+    },
+    {
+      "id": "q10",
+      "question": "Why can fixed-length chunking hurt retrieval of method statements?",
+      "category": "factual",
+      "gold_docs": ["section-aware-chunking", "multi-agent-decomposition"],
+      "key_points": ["section boundary", "rhetorical structure", "lose"],
+      "notes": "Explanation question; accepts evidence from either paper."
+    },
+    {
+      "id": "q11",
+      "question": "What recall improvement does acronym-aware query expansion produce?",
+      "category": "factual",
+      "gold_docs": ["acronym-aware-query-expansion"],
+      "key_points": ["0.54", "0.69", "acronym"],
+      "notes": "Numeric recall question."
+    },
+    {
+      "id": "q12",
+      "question": "Why can too much query expansion hurt precision?",
+      "category": "factual",
+      "gold_docs": ["acronym-aware-query-expansion"],
+      "key_points": ["more than eight terms", "precision", "noise"],
+      "notes": "Causal question whose answer is a caveat in the results section."
+    },
+    {
+      "id": "q13",
+      "question": "How accurate is cue-phrase matching for detecting research gaps?",
+      "category": "factual",
+      "gold_docs": ["detecting-research-gaps"],
+      "key_points": ["0.74", "precision", "cue-phrase"],
+      "notes": "Precision value with the method name."
+    },
+    {
+      "id": "q14",
+      "question": "What are the common failure modes when detecting research gaps?",
+      "category": "gap",
+      "gold_docs": ["detecting-research-gaps"],
+      "key_points": ["deduplicate", "implicit", "isolation"],
+      "notes": "Limitations question; single-agent baselines typically retrieve the wrong section."
+    },
+    {
+      "id": "q15",
+      "question": "Which faithfulness quantity is rarely measured in RAG evaluation?",
+      "category": "comparison",
+      "gold_docs": ["evaluating-faithfulness"],
+      "key_points": ["support", "rarely measured", "citation existence"],
+      "notes": "Requires distinguishing the three quantities."
+    },
+    {
+      "id": "q16",
+      "question": "How well does token-overlap support checking agree with human labels?",
+      "category": "factual",
+      "gold_docs": ["evaluating-faithfulness", "citation-validation"],
+      "key_points": ["0.87", "agreement", "token overlap"],
+      "notes": "Cross-paper numeric question."
+    },
+    {
+      "id": "q17",
+      "question": "Which four fields are extracted when comparing methodologies across papers?",
+      "category": "methodology",
+      "gold_docs": ["comparing-methodologies"],
+      "key_points": ["method", "dataset", "metric", "reported result"],
+      "notes": "Schema question."
+    },
+    {
+      "id": "q18",
+      "question": "What is the most common cause of failed reproduction in retrieval experiments?",
+      "category": "factual",
+      "gold_docs": ["reproducibility-of-retrieval"],
+      "key_points": ["preprocessing", "undocumented", "corpus version"],
+      "notes": "Ranking question over reported causes."
+    },
+    {
+      "id": "q19",
+      "question": "Compare how the multi-agent and single-call approaches handle citation validation.",
+      "category": "comparison",
+      "gold_docs": ["multi-agent-decomposition", "citation-validation", "evaluating-faithfulness"],
+      "key_points": ["validator", "citation precision", "unsupported"],
+      "notes": "Multi-document comparison; needs the methodology-comparison agent."
+    },
+    {
+      "id": "q20",
+      "question": "What open problems remain for evaluating retrieval-augmented scientific answering?",
+      "category": "gap",
+      "gold_docs": ["evaluating-faithfulness", "reproducibility-of-retrieval", "multi-agent-decomposition"],
+      "key_points": ["annotator", "small sample", "statistical power", "multilingual"],
+      "notes": "Synthesis question over three papers' limitation sections."
+    }
+  ]
+}

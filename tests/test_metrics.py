@@ -20,10 +20,10 @@ Run with:  pytest -s tests/test_metrics.py   (the -s flag shows the summary)
 
 import time
 
-import old_directory.security as security
+import security as security
 from agent_controller import AgentController, extract_json, validate_action
+from tests.conftest import FakeRetriever, ScriptedModel
 from tools import ToolContext
-from tests.conftest import ScriptedModel, FakeRetriever
 
 
 def _agent(responses, ctx):
@@ -34,7 +34,7 @@ def _agent(responses, ctx):
 def test_agent_metrics(sample_db, ws_subdir, capsys):
     name, path = ws_subdir
     (path / "a.txt").write_text("hello", encoding="utf-8")
-    report_name = "_pytest_metrics_report.md"
+    report_name = "pytest_metrics_report.md"
     report_path = security.WORKSPACE_DIR / report_name
 
     ctx = ToolContext(confirm=lambda _m: True, db_path=sample_db, retriever=FakeRetriever())

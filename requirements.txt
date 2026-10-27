@@ -1,25 +1,34 @@
 # ---------------------------------------------------------------------------
-# Offline AI Agent - Python dependencies
-#
-# Install everything ONCE while online, then the agent runs fully offline.
-# GPU (CUDA) is recommended for 4-bit inference. See README for CPU notes.
+# Core runtime - required for the MCP server, the CLI slash commands, the doctor
+# command, the selftest and the test suite.
 # ---------------------------------------------------------------------------
+fastmcp>=4.1.2
+psutil>=7.2.2
+pydantic>=2.14.1
 
-# --- Core inference stack ---
-torch>=2.2.0                 # install the CUDA build that matches your driver
-transformers>=4.45.0         # Llama 3.2 chat template + generation
-peft>=0.13.0                 # LoRA / QLoRA adapter loading
-accelerate>=0.34.0           # device_map / low-memory loading
-bitsandbytes>=0.43.0         # 4-bit NF4 double quantization (CUDA only)
+# ---------------------------------------------------------------------------
+# Optional: only needed for free-form (model-driven) requests.
+# Install the wheel that matches your platform; CUDA builds are available.
+# ---------------------------------------------------------------------------
+# llama-cpp-python>=0.2.90
 
-# --- Local retrieval (RAG) ---
-sentence-transformers>=3.0.0 # local embeddings
-faiss-cpu>=1.8.0             # local vector index (use faiss-gpu if preferred)
-numpy>=1.24.0
+# ---------------------------------------------------------------------------
+# Optional: desktop helpers
+# ---------------------------------------------------------------------------
+# pillow>=10.0.0          # screenshot on Windows
+# pycaw>=20240210         # volume/mute on Windows
+# comtypes>=1.2.0         # pycaw dependency
 
-# --- Document processing ---
-PyMuPDF>=1.24.0              # PDF text extraction (imported as `fitz`)
-python-docx>=1.1.0           # optional: .docx extraction
+# Linux equivalents (install with your package manager, not pip):
+#   pactl (pipewire/pulseaudio)   volume
+#   brightnessctl                 display brightness
+#   xclip or wl-clipboard         clipboard
+#   scrot / grim / imagemagick    screenshot
+#   libnotify-bin                 notifications
+#   playerctl                     media keys
 
-# --- Testing ---
-pytest>=8.0.0
+# ---------------------------------------------------------------------------
+# Development
+# ---------------------------------------------------------------------------
+pytest>=9.1.1
+pytest-asyncio>=1.4.0
