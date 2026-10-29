@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Intent-Gated Multi-Agent & FastMCP Visualizer</title>
+  <style>
+    :root {
+      --bg: #07090e;
+      --panel: rgba(15, 20, 32, 0.86);
+      --border: rgba(99, 179, 237, 0.25);
+      --cyan: #00f2fe;
+      --gold: #facc15;
+      --purple: #a855f7;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --text: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, monospace; }
+    body { background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; width: 100vw; }
+    #canvas-container { position: absolute; inset: 0; z-index: 1; }
+
+    .hud-top {
+      position: absolute; top: 16px; left: 16px; right: 16px; z-index: 10;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      pointer-events: none;
+    }
+    .brand-box, .controls-box {
+      background: var(--panel); backdrop-filter: blur(12px);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px 18px; pointer-events: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+    .brand-title { font-size: 15px; font-weight: 700; letter-spacing: 0.5px; color: var(--gold); }
+    .brand-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+
+    .controls-box { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .btn {
+      background: rgba(30, 41, 59, 0.9); color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 6px;
+      padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn:hover { border-color: var(--gold); color: #fff; transform: translateY(-1px); }
+    .btn-rag { border-color: rgba(168, 85, 247, 0.5); }
+    .btn-rag:hover { border-color: var(--purple); color: #e9d5ff; }
+    .btn-danger { border-color: rgba(239, 68, 68, 0.5); }
+    .btn-danger:hover { border-color: var(--red); color: #fecaca; }
+
+    .hud-left {
+      position: absolute; top: 96px; left: 16px; width: 325px; z-index: 10;
+      background: var(--panel); backdrop-filter: blur(12px);
+      border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; font-weight: 700; }
+    .classifier-badge {
+      background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.4);
+      border-radius: 8px; padding: 10px; font-size: 11.5px; line-height: 1.45;
+    }
+    .classifier-badge b { color: var(--gold); }
+
+    .meter-group { display: flex; flex-direction: column; gap: 4px; }
+    .meter-label { display: flex; justify-content: space-between; font-size: 12px; }
+    .meter-bar { height: 7px; background: #1e293b; border-radius: 4px; overflow: hidden; }
+    .meter-fill { height: 100%; transition: width 0.4s ease; }
+
+    .prompt-input-wrap { display: flex; gap: 6px; margin-top: 4px; }
+    .prompt-input {
+      flex: 1; background: #0f172a; border: 1px solid #334155; color: #fff;
+      padding: 7px 10px; border-radius: 6px; font-size: 12px; outline: none;
+    }
+    .prompt-input:focus { border-color: var(--gold); }
+
+    .hud-right {
+      position: absolute; top: 96px; right: 16px; bottom: 16px; width: 400px; z-index: 10;
+      background: var(--panel); backdrop-filter: blur(12px);
+      border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+      display: flex; flex-direction: column;
+    }
+    #trace-log {
+      flex: 1; overflow-y: auto; font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 11.5px; line-height: 1.5; display: flex; flex-direction: column; gap: 8px;
+      margin-top: 8px; padding-right: 4px;
+    }
+    .log-entry {
+      background: rgba(15, 23, 42, 0.75); border-left: 3px solid var(--cyan);
+      padding: 8px 10px; border-radius: 4px; word-break: break-word;
+    }
+    .log-entry.intent { border-left-color: var(--gold); background: rgba(250, 204, 21, 0.08); }
+    .log-entry.agent2 { border-left-color: var(--purple); }
+    .log-entry.mcp { border-left-color: var(--green); }
+    .log-entry.warn { border-left-color: var(--amber); background: rgba(245, 158, 11, 0.1); }
+    .log-entry.error { border-left-color: var(--red); }
+    .log-tag { font-weight: 700; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+
+    .node-label {
+      position: absolute; z-index: 5; pointer-events: none;
+      transform: translate(-50%, -100%);
+      background: rgba(10, 15, 28, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 4px 9px; border-radius: 6px;
+      font-size: 11px; font-weight: 600; white-space: nowrap;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .node-label.active-node {
+      border-color: var(--gold);
+      box-shadow: 0 0 14px rgba(250, 204, 21, 0.65);
+      color: #fff;
+    }
+    .node-sub { font-size: 9.5px; color: #94a3b8; display: block; font-weight: 400; }
+
+    #security-modal {
+      position: absolute; inset: 0; z-index: 50;
+      background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px);
+      display: none; align-items: center; justify-content: center;
+    }
+    .modal-card {
+      background: #0f172a; border: 2px solid var(--amber);
+      border-radius: 12px; width: 420px; padding: 20px;
+      box-shadow: 0 0 40px rgba(245, 158, 11, 0.35);
+    }
+    .modal-title { color: var(--amber); font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .modal-body { font-size: 12.5px; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; }
+    .token-box {
+      background: #020617; border: 1px dashed var(--amber);
+      padding: 8px; border-radius: 6px; font-family: monospace;
+      font-size: 12px; color: #fde68a; margin-bottom: 16px; text-align: center;
+    }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+  <div id="labels-container"></div>
+
+  <!-- Top Bar -->
+  <div class="hud-top">
+    <div class="brand-box">
+      <div class="brand-title">⚡ INTENT-GATED MULTI-AGENT + FastMCP 3D VISUALIZER</div>
+      <div class="brand-sub">User ➔ Intent Classifier (&lt;1ms) ➔ Pruned Agent 1 OR Direct Agent 2 (RAG) ➔ 5 MCP Tools</div>
+    </div>
+
+    <div class="controls-box">
+      <button class="btn" onclick="runScenario('fast_single')">1. Fast Single-Tool (Pruned Schema)</button>
+      <button class="btn btn-rag" onclick="runScenario('direct_rag')">2. Direct RAG Bypass (Skip Agent 1!)</button>
+      <button class="btn" onclick="runScenario('multi_step')">3. Multi-Step Chained Planner</button>
+      <button class="btn btn-danger" onclick="runScenario('power_gate')">4. Tier-3 Power Token Gate</button>
+      <button class="btn" onclick="runScenario('full_sweep')">5. Full 5-Tool Sweep</button>
+    </div>
+  </div>
+
+  <!-- Left Hardware & Intent Telemetry HUD -->
+  <div class="hud-left">
+    <div class="section-title">⚡ Live Intent Classifier Gate</div>
+    <div class="classifier-badge" id="intent-card">
+      <b>Route:</b> <span id="ic-route">IDLE</span><br/>
+      <b>Target:</b> <span id="ic-target">Waiting for prompt...</span><br/>
+      <b>Pruned Tools:</b> <span id="ic-tools">None</span><br/>
+      <b>Gate Latency:</b> <span id="ic-latency">0.00 ms</span> (Saved ~1.8s LLM overhead)
+    </div>
+
+    <div class="section-title">VRAM & Context Optimization</div>
+    <div class="meter-group">
+      <div class="meter-label"><span>GPU VRAM (Qwen3.5-4BQ GGUF)</span><span>2.65 / 4.00 GB</span></div>
+      <div class="meter-bar"><div class="meter-fill" style="width: 66%; background: var(--cyan);"></div></div>
+    </div>
+    <div class="meter-group">
+      <div class="meter-label"><span>Active Prompt Tokens (Schema Pruned)</span><span id="ctx-val">65 / 1024 tok</span></div>
+      <div class="meter-bar"><div class="meter-fill" id="ctx-bar" style="width: 7%; background: var(--gold);"></div></div>
+    </div>
+
+    <div class="section-title" style="margin-top: 4px;">Test Any Prompt Through Classifier</div>
+    <div class="prompt-input-wrap">
+      <input type="text" id="custom-prompt" class="prompt-input" placeholder="e.g. Check RAM / Generate health report..." />
+      <button class="btn" onclick="handleCustomPrompt()">Classify & Run</button>
+    </div>
+  </div>
+
+  <!-- Right Live Trace Log -->
+  <div class="hud-right">
+    <div class="section-title">Live Intent Gate, Agent & JSON-RPC Trace</div>
+    <div id="trace-log"></div>
+  </div>
+
+  <!-- Tier 3 Confirmation Gate Modal -->
+  <div id="security-modal">
+    <div class="modal-card">
+      <div class="modal-title">⚠️ TIER-3 DESTRUCTIVE ACTION INTERCEPTED</div>
+      <div class="modal-body">
+        FastMCP Server halted execution of <b>power_session (shutdown)</b>. A one-time cryptographic token has been issued by <code>mcp_server/security.py</code>.
+      </div>
+      <div class="token-box">TOKEN: 8f9d2a1c4b7e093a (TTL: 120s)</div>
+      <div class="modal-actions">
+        <button class="btn" onclick="resolveConfirmation(false)">Abort Action (n)</button>
+        <button class="btn btn-danger" onclick="resolveConfirmation(true)">Approve & Consume Token (y)</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const container = document.getElementById('canvas-container');
+    const labelsContainer = document.getElementById('labels-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x07090e, 0.017);
+
+    const camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 200);
+    camera.position.set(0, 11.5, 25);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.target.set(0, 1, 0);
+
+    const grid = new THREE.GridHelper(46, 46, 0x1e293b, 0x0f172a);
+    grid.position.y = -4.5;
+    scene.add(grid);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+    const dirLight = new THREE.DirectionalLight(0x00f2fe, 1.4);
+    dirLight.position.set(10, 20, 15);
+    scene.add(dirLight);
+    const goldLight = new THREE.PointLight(0xfacc15, 2.2, 25);
+    goldLight.position.set(-7, 2, 2);
+    scene.add(goldLight);
+
+    // --- ARCHITECTURE NODES (INCLUDING NEW INTENT CLASSIFIER GATE) ---
+    const NODE_DEFS = {
+      user: {
+        title: "User Prompt",
+        sub: "CLI / UI Input",
+        pos: new THREE.Vector3(-12.5, 1.5, 0),
+        color: 0x38bdf8,
+        geo: new THREE.SphereGeometry(0.9, 32, 32)
+      },
+      classifier: {
+        title: "⚡ Intent Classifier Gate",
+        sub: "<0.5ms Zero-VRAM • Prunes Schema / Routes",
+        pos: new THREE.Vector3(-7.2, 1.5, 0),
+        color: 0xfacc15,
+        geo: new THREE.OctahedronGeometry(1.15, 0)
+      },
+      llm: {
+        title: "Qwen3.5-4BQ (model.gguf)",
+        sub: "Shared 2.5GB VRAM Core + GBNF",
+        pos: new THREE.Vector3(-1.8, 6.4, 0),
+        color: 0xf43f5e,
+        geo: new THREE.OctahedronGeometry(1.25, 1)
+      },
+      agent1: {
+        title: "Agent 1: SystemAgentOrchestrator",
+        sub: "Pruned Single-Tool OR Multi-Step Planner",
+        pos: new THREE.Vector3(-1.8, 1.8, 0),
+        color: 0x00f2fe,
+        geo: new THREE.IcosahedronGeometry(1.15, 1)
+      },
+      agent2: {
+        title: "Agent 2: RAGReportAgent",
+        sub: "Direct RAG Route • Zero-VRAM BM25",
+        pos: new THREE.Vector3(-1.8, -3.0, 2.0),
+        color: 0xa855f7,
+        geo: new THREE.IcosahedronGeometry(1.1, 1)
+      },
+      rag_docs: {
+        title: "workspace/ Docs Index",
+        sub: "system_policy.md • health_report.md",
+        pos: new THREE.Vector3(-7.5, -3.2, 2.2),
+        color: 0xc084fc,
+        geo: new THREE.BoxGeometry(1.35, 1.35, 1.35)
+      },
+      mcp: {
+        title: "FastMCP Server",
+        sub: "stdio JSON-RPC • Pydantic Shield",
+        pos: new THREE.Vector3(4.5, 1.5, 0),
+        color: 0x10b981,
+        geo: new THREE.CylinderGeometry(1.1, 1.1, 1.6, 6)
+      },
+      system_telemetry: {
+        title: "1. system_telemetry",
+        sub: "Tier 1 • cpu | memory | disk | battery",
+        pos: new THREE.Vector3(10.8, 5.2, -2.5),
+        color: 0x22d3ee,
+        geo: new THREE.BoxGeometry(1.1, 1.1, 1.1)
+      },
+      hardware_controls: {
+        title: "2. hardware_controls",
+        sub: "Tier 2 • volume | mute | brightness",
+        pos: new THREE.Vector3(11.4, 2.8, -1.0),
+        color: 0x34d399,
+        geo: new THREE.BoxGeometry(1.1, 1.1, 1.1)
+      },
+      app_lifecycle: {
+        title: "3. app_lifecycle",
+        sub: "Tier 2/3 • launch | list | request_kill",
+        pos: new THREE.Vector3(11.7, 0.4, 0.5),
+        color: 0x60a5fa,
+        geo: new THREE.BoxGeometry(1.1, 1.1, 1.1)
+      },
+      workspace_fs: {
+        title: "4. workspace_fs",
+        sub: "Tier 2 Jail • list | read | write | search",
+        pos: new THREE.Vector3(11.2, -2.0, 1.8),
+        color: 0xa78bfa,
+        geo: new THREE.BoxGeometry(1.1, 1.1, 1.1)
+      },
+      power_session: {
+        title: "5. power_session",
+        sub: "Tier 3 Token Gate • lock | sleep | shutdown",
+        pos: new THREE.Vector3(10.2, -4.0, 3.0),
+        color: 0xf59e0b,
+        geo: new THREE.BoxGeometry(1.1, 1.1, 1.1)
+      }
+    };
+
+    const nodes = {};
+    const activePackets = [];
+
+    for (const [id, def] of Object.entries(NODE_DEFS)) {
+      const mat = new THREE.MeshStandardMaterial({
+        color: def.color,
+        emissive: def.color,
+        emissiveIntensity: 0.28,
+        roughness: 0.25,
+        metalness: 0.7
+      });
+      const mesh = new THREE.Mesh(def.geo, mat);
+      mesh.position.copy(def.pos);
+      scene.add(mesh);
+
+      const wireMat = new THREE.MeshBasicMaterial({ color: def.color, wireframe: true, transparent: true, opacity: 0.24 });
+      const wireMesh = new THREE.Mesh(def.geo.clone().scale(1.24, 1.24, 1.24), wireMat);
+      mesh.add(wireMesh);
+
+      const label = document.createElement('div');
+      label.className = 'node-label';
+      label.innerHTML = `${def.title}<span class="node-sub">${def.sub}</span>`;
+      labelsContainer.appendChild(label);
+
+      nodes[id] = { id, def, mesh, wireMesh, label, pulseUntil: 0 };
+    }
+
+    const LINK_PAIRS = [
+      ['user', 'classifier'],
+      ['classifier', 'agent1'],
+      ['classifier', 'agent2'],   // Direct Fast-Path to Agent 2 (skips Agent 1!)
+      ['agent1', 'llm'],
+      ['agent2', 'llm'],
+      ['agent1', 'agent2'],
+      ['agent2', 'rag_docs'],
+      ['agent1', 'mcp'],
+      ['agent2', 'mcp'],
+      ['mcp', 'system_telemetry'],
+      ['mcp', 'hardware_controls'],
+      ['mcp', 'app_lifecycle'],
+      ['mcp', 'workspace_fs'],
+      ['mcp', 'power_session']
+    ];
+
+    LINK_PAIRS.forEach(([from, to]) => {
+      const points = [nodes[from].mesh.position, nodes[to].mesh.position];
+      const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
+      const isClassifierLink = from === 'classifier';
+      const lineMat = new THREE.LineBasicMaterial({
+        color: isClassifierLink ? 0x854d0e : 0x334155,
+        transparent: true,
+        opacity: isClassifierLink ? 0.75 : 0.55
+      });
+      scene.add(new THREE.Line(lineGeo, lineMat));
+    });
+
+    const logContainer = document.getElementById('trace-log');
+
+    function addLog(tag, text, type = 'default') {
+      const div = document.createElement('div');
+      div.className = `log-entry ${type}`;
+      div.innerHTML = `<span class="log-tag">${tag}</span>${text}`;
+      logContainer.appendChild(div);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    function updateIntentHUD(route, target, tools, latency, tokens) {
+      document.getElementById('ic-route').textContent = route;
+      document.getElementById('ic-target').textContent = target;
+      document.getElementById('ic-tools').textContent = tools;
+      document.getElementById('ic-latency').textContent = `${latency} ms`;
+      const pct = Math.min(100, Math.round((tokens / 1024) * 100));
+      document.getElementById('ctx-val').textContent = `${tokens} / 1024 tok`;
+      document.getElementById('ctx-bar').style.width = `${pct}%`;
+    }
+
+    function pulseNode(nodeId, durationMs = 900) {
+      const n = nodes[nodeId];
+      if (!n) return;
+      n.pulseUntil = performance.now() + durationMs;
+      n.label.classList.add('active-node');
+      setTimeout(() => n.label.classList.remove('active-node'), durationMs);
+    }
+
+    function sendPacket(fromId, toId, colorHex = 0x00f2fe, durationMs = 600) {
+      return new Promise((resolve) => {
+        const startPos = nodes[fromId].mesh.position.clone();
+        const endPos = nodes[toId].mesh.position.clone();
+        pulseNode(fromId, durationMs);
+
+        const pktGeo = new THREE.SphereGeometry(0.27, 16, 16);
+        const pktMat = new THREE.MeshBasicMaterial({ color: colorHex });
+        const pktMesh = new THREE.Mesh(pktGeo, pktMat);
+        pktMesh.position.copy(startPos);
+        scene.add(pktMesh);
+
+        activePackets.push({
+          mesh: pktMesh,
+          startPos,
+          endPos,
+          startTime: performance.now(),
+          duration: durationMs,
+          onArrive: () => {
+            scene.remove(pktMesh);
+            pktGeo.dispose();
+            pktMat.dispose();
+            pulseNode(toId, 800);
+            resolve();
+          }
+        });
+      });
+    }
+
+    let pendingConfirmationResolver = null;
+    window.resolveConfirmation = function(approved) {
+      document.getElementById('security-modal').style.display = 'none';
+      if (pendingConfirmationResolver) {
+        pendingConfirmationResolver(approved);
+        pendingConfirmationResolver = null;
+      }
+    };
+
+    function waitUserConfirmationModal() {
+      document.getElementById('security-modal').style.display = 'flex';
+      return new Promise((resolve) => { pendingConfirmationResolver = resolve; });
+    }
+
+    let isRunning = false;
+
+    window.runScenario = async function(scenarioKey) {
+      if (isRunning) return;
+      isRunning = true;
+      logContainer.innerHTML = '';
+
+      if (scenarioKey === 'fast_single') {
+        addLog('USER PROMPT', '"How much memory is my system using right now?"');
+        await sendPacket('user', 'classifier', 0x38bdf8, 450);
+
+        updateIntentHUD('FAST_SINGLE_TOOL', 'Agent 1 (Single-Pass)', '["system_telemetry"] (4 tools pruned!)', '0.28', 68);
+        addLog('⚡ INTENT CLASSIFIER (0.28ms)', 'Matched <code>system_telemetry</code> only. Pruned 4 irrelevant tools from prompt (75% fewer tokens!).', 'intent');
+        await sendPacket('classifier', 'agent1', 0xfacc15, 500);
+
+        addLog('AGENT 1 -> GGUF CORE', 'Single-branch GBNF schema compiled in 12ms...');
+        await sendPacket('agent1', 'llm', 0xf43f5e, 500);
+        await sendPacket('llm', 'agent1', 0xf43f5e, 500);
+
+        addLog('GBNF DECISION', '<code>{"tool": "system_telemetry", "arguments": {"metric": "memory"}}</code>');
+        await sendPacket('agent1', 'mcp', 0x00f2fe, 500);
+        await sendPacket('mcp', 'system_telemetry', 0x10b981, 500);
+        await sendPacket('system_telemetry', 'mcp', 0x22d3ee, 500);
+        await sendPacket('mcp', 'agent1', 0x10b981, 500);
+
+        await sendPacket('agent1', 'classifier', 0x00f2fe, 400);
+        await sendPacket('classifier', 'user', 0x38bdf8, 400);
+        addLog('COMPLETE', 'Memory usage is 94.2% (Fast single-tool path saved ~1.6s).', 'mcp');
+      }
+
+      else if (scenarioKey === 'direct_rag') {
+        addLog('USER PROMPT', '"Read workspace policy documents and generate a system health report."');
+        await sendPacket('user', 'classifier', 0x38bdf8, 450);
+
+        updateIntentHUD('DIRECT_RAG_AGENT', 'Agent 2 (RAGReportAgent) — Agent 1 Bypassed!', '["system_telemetry", "workspace_fs"]', '0.31', 195);
+        addLog('⚡ INTENT CLASSIFIER (0.31ms)', 'Detected <b>RAG / Health Report</b> intent! <b>Bypassing Agent 1 completely</b> -> Direct dispatch to Agent 2!', 'intent');
+        await sendPacket('classifier', 'agent2', 0xfacc15, 550);
+
+        addLog('AGENT 2 (BM25 RAG)', 'Indexing <code>workspace/system_policy.md</code> (0 MB VRAM)...', 'agent2');
+        await sendPacket('agent2', 'rag_docs', 0xc084fc, 500);
+        await sendPacket('rag_docs', 'agent2', 0xc084fc, 500);
+
+        addLog('AGENT 2 -> FastMCP', 'Fetching live CPU, Memory, Disk, Battery stats...', 'agent2');
+        await sendPacket('agent2', 'mcp', 0xa855f7, 500);
+        await sendPacket('mcp', 'system_telemetry', 0x10b981, 450);
+        await sendPacket('system_telemetry', 'mcp', 0x22d3ee, 450);
+        await sendPacket('mcp', 'agent2', 0x10b981, 500);
+
+        addLog('AGENT 2 -> SHARED GGUF', 'Comparing live telemetry vs policy thresholds (Single LLM call)...', 'agent2');
+        await sendPacket('agent2', 'llm', 0xf43f5e, 550);
+        await sendPacket('llm', 'agent2', 0xf43f5e, 550);
+
+        addLog('AGENT 2 -> workspace_fs', 'Writing <code>workspace/health_report.md</code> inside sandbox...', 'agent2');
+        await sendPacket('agent2', 'mcp', 0xa855f7, 500);
+        await sendPacket('mcp', 'workspace_fs', 0x10b981, 450);
+        await sendPacket('workspace_fs', 'mcp', 0xa78bfa, 450);
+        await sendPacket('mcp', 'agent2', 0x10b981, 500);
+
+        await sendPacket('agent2', 'classifier', 0xa855f7, 450);
+        await sendPacket('classifier', 'user', 0x38bdf8, 450);
+        addLog('COMPLETE', 'Health report written! Saved 1 full LLM routing call by bypassing Agent 1.', 'mcp');
+      }
+
+      else if (scenarioKey === 'multi_step') {
+        addLog('USER PROMPT', '"List running processes and then save the list to processes.txt in workspace"');
+        await sendPacket('user', 'classifier', 0x38bdf8, 450);
+
+        updateIntentHUD('MULTI_STEP_PLANNER', 'Agent 1 (Chained Scratchpad)', '["app_lifecycle", "workspace_fs"]', '0.42', 145);
+        addLog('⚡ INTENT CLASSIFIER (0.42ms)', 'Detected conjunction <code>"and then"</code> + 2 tools (<code>app_lifecycle</code>, <code>workspace_fs</code>). Pruned other 3 tools.', 'intent');
+        await sendPacket('classifier', 'agent1', 0xfacc15, 500);
+
+        await sendPacket('agent1', 'llm', 0xf43f5e, 500);
+        await sendPacket('llm', 'agent1', 0xf43f5e, 500);
+        addLog('STEP 1: app_lifecycle', 'Listing active processes...');
+        await sendPacket('agent1', 'mcp', 0x00f2fe, 450);
+        await sendPacket('mcp', 'app_lifecycle', 0x10b981, 450);
+        await sendPacket('app_lifecycle', 'mcp', 0x60a5fa, 450);
+        await sendPacket('mcp', 'agent1', 0x10b981, 450);
+
+        await sendPacket('agent1', 'llm', 0xf43f5e, 500);
+        await sendPacket('llm', 'agent1', 0xf43f5e, 500);
+        addLog('STEP 2: workspace_fs', 'Writing output to <code>workspace/processes.txt</code>...');
+        await sendPacket('agent1', 'mcp', 0x00f2fe, 450);
+        await sendPacket('mcp', 'workspace_fs', 0x10b981, 450);
+        await sendPacket('workspace_fs', 'mcp', 0xa78bfa, 450);
+        await sendPacket('mcp', 'agent1', 0x10b981, 450);
+
+        await sendPacket('agent1', 'classifier', 0x00f2fe, 400);
+        await sendPacket('classifier', 'user', 0x38bdf8, 400);
+        addLog('COMPLETE', '2-step chained execution finished with pruned 2-tool schema.', 'mcp');
+      }
+
+      else if (scenarioKey === 'power_gate') {
+        addLog('USER PROMPT', '"Shut down the computer now."');
+        await sendPacket('user', 'classifier', 0x38bdf8, 450);
+
+        updateIntentHUD('FAST_SINGLE_TOOL (TIER-3)', 'Agent 1 -> Power Gate', '["power_session"]', '0.24', 62);
+        addLog('⚡ INTENT CLASSIFIER (0.24ms)', 'Isolated <code>power_session</code> (Tier-3 High-Impact). Pruned 4 tools.', 'intent');
+        await sendPacket('classifier', 'agent1', 0xfacc15, 500);
+
+        await sendPacket('agent1', 'llm', 0xf43f5e, 450);
+        await sendPacket('llm', 'agent1', 0xf43f5e, 450);
+        await sendPacket('agent1', 'mcp', 0x00f2fe, 450);
+        await sendPacket('mcp', 'power_session', 0xf59e0b, 450);
+        await sendPacket('power_session', 'mcp', 0xf59e0b, 450);
+        await sendPacket('mcp', 'agent1', 0xf59e0b, 450);
+
+        addLog('SECURITY GATE TRIGGERED', 'Awaiting user approval for one-time token...', 'warn');
+        const approved = await waitUserConfirmationModal();
+
+        if (approved) {
+          addLog('TOKEN VERIFIED', 'Consuming token & initiating system shutdown.', 'mcp');
+          await sendPacket('agent1', 'mcp', 0x10b981, 450);
+          await sendPacket('mcp', 'power_session', 0x10b981, 450);
+          await sendPacket('power_session', 'mcp', 0x10b981, 450);
+          await sendPacket('mcp', 'agent1', 0x10b981, 450);
+        } else {
+          addLog('ABORTED BY USER', 'Token discarded safely.', 'error');
+        }
+        await sendPacket('agent1', 'classifier', 0x00f2fe, 400);
+        await sendPacket('classifier', 'user', 0x38bdf8, 400);
+      }
+
+      else if (scenarioKey === 'full_sweep') {
+        addLog('USER PROMPT', '"Run full system diagnostic across all tools and RAG."');
+        await sendPacket('user', 'classifier', 0x38bdf8, 400);
+        updateIntentHUD('FULL_SWEEP', 'Agent 1 + Agent 2', 'All 5 Tools Active', '0.51', 420);
+        await sendPacket('classifier', 'agent1', 0xfacc15, 400);
+        await sendPacket('agent1', 'llm', 0xf43f5e, 400);
+        await sendPacket('llm', 'agent1', 0xf43f5e, 400);
+
+        for (const t of ['system_telemetry', 'hardware_controls', 'app_lifecycle', 'workspace_fs', 'power_session']) {
+          addLog('MCP CALL', `Executing <code>${t}</code>...`);
+          await sendPacket('agent1', 'mcp', 0x00f2fe, 320);
+          await sendPacket('mcp', t, 0x10b981, 320);
+          await sendPacket(t, 'mcp', 0x22d3ee, 320);
+          await sendPacket('mcp', 'agent1', 0x10b981, 320);
+        }
+        await sendPacket('classifier', 'agent2', 0xfacc15, 400);
+        await sendPacket('agent2', 'rag_docs', 0xc084fc, 400);
+        await sendPacket('rag_docs', 'agent2', 0xc084fc, 400);
+        await sendPacket('agent2', 'classifier', 0xa855f7, 400);
+        await sendPacket('classifier', 'user', 0x38bdf8, 400);
+        addLog('SWEEP COMPLETE', 'All routes verified!', 'mcp');
+      }
+
+      isRunning = false;
+    };
+
+    window.handleCustomPrompt = function() {
+      const input = document.getElementById('custom-prompt');
+      const val = input.value.trim().toLowerCase();
+      if (!val) return;
+      if (val.includes('rag') || val.includes('report') || val.includes('health') || val.includes('policy')) {
+        runScenario('direct_rag');
+      } else if (val.includes('shut') || val.includes('restart') || val.includes('power') || val.includes('sleep')) {
+        runScenario('power_gate');
+      } else if (val.includes(' and ') || val.includes(' then ') || val.includes('save')) {
+        runScenario('multi_step');
+      } else {
+        runScenario('fast_single');
+      }
+      input.value = '';
+    };
+
+    function animate(now) {
+      requestAnimationFrame(animate);
+      controls.update();
+
+      for (const n of Object.values(nodes)) {
+        n.mesh.rotation.y += 0.009;
+        n.mesh.rotation.x += 0.004;
+        const isPulsing = now < n.pulseUntil;
+        const targetScale = isPulsing ? 1.38 : 1.0;
+        n.mesh.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.12);
+        n.mesh.material.emissiveIntensity = isPulsing ? 0.95 : 0.28;
+
+        const pos = n.mesh.position.clone();
+        pos.y += 1.45;
+        pos.project(camera);
+        const x = (pos.x * 0.5 + 0.5) * window.innerWidth;
+        const y = (-(pos.y * 0.5) + 0.5) * window.innerHeight;
+        n.label.style.left = `${x}px`;
+        n.label.style.top = `${y}px`;
+        n.label.style.display = pos.z > 1 ? 'none' : 'block';
+      }
+
+      for (let i = activePackets.length - 1; i >= 0; i--) {
+        const pkt = activePackets[i];
+        const t = Math.min(1, (now - pkt.startTime) / pkt.duration);
+        pkt.mesh.position.lerpVectors(pkt.startPos, pkt.endPos, t);
+        if (t >= 1) {
+          pkt.onArrive();
+          activePackets.splice(i, 1);
+        }
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    animate(performance.now());
+    setTimeout(() => runScenario('direct_rag'), 600);
+  </script>
+</body>
+</html>

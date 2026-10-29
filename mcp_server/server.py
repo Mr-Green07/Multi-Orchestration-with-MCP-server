@@ -100,9 +100,10 @@ def app_lifecycle(
 
 @mcp.tool(annotations={"readOnlyHint": False})
 def workspace_fs(
-    action: Literal["list", "read_text", "search"],
+    action: Literal["list", "read_text", "write_text", "search"],
     relative_path: str = "",
-    search_query: Optional[str] = None
+    search_query: Optional[str] = None,
+    content: Optional[str] = None
 ) -> dict:
     """Safely inspect, read, or search files within the sandboxed workspace folder."""
     return execute_workspace_fs(action, relative_path, search_query) # type: ignore

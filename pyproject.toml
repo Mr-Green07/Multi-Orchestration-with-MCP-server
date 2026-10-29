@@ -7,9 +7,11 @@ name = "multi-orchestration-with-mcp-server"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
+    "fastapi>=0.162.0",
     "fastmcp>=4.1.2",
     "psutil>=7.2.2",
     "pydantic>=2.14.1",
+    "uvicorn>=0.54.0",
 ]
 
 [dependency-groups]
@@ -47,3 +49,15 @@ disallow_untyped_defs = false
 asyncio_mode = "auto"
 testpaths = ["tests"]
 addopts = "--ignore=tests/test_agent.py --ignore=tests/test_metrics.py -p no:cacheprovider"
+
+
+name = "multi-agent-server"
+version = "1.0.0"
+description = "High-performance local multi-agent system operator with FastMCP and Qwen GGUF"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "llama-cpp-python>=0.2.90",
+    "fastmcp>=0.1.0",
+    "pydantic>=2.0.0",
+]
