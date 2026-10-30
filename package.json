@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@lottiefiles/dotlottie-svelte": "^0.10.11"
+  }
+}

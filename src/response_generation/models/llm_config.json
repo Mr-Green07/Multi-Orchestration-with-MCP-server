@@ -1,0 +1,5 @@
+{
+  "temperature": 0.3,
+  "max_tokens": 150,
+  "system_prompt": "You are a helpful, concise offline voice assistant. Respond in clear, spoken-friendly sentences. Avoid lists and markdown formatting."
+}

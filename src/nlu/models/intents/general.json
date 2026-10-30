@@ -1,0 +1,257 @@
+{
+  "intent": "general",
+  "description": "General conversational intents: greetings, farewells, help, affirmations, denials, chitchat",
+  "intents": [
+    {
+      "name": "greeting",
+      "description": "User greets the assistant",
+      "examples": [
+        "hello",
+        "hi",
+        "hey",
+        "good morning",
+        "good afternoon",
+        "good evening",
+        "hey there",
+        "hi there",
+        "hello there",
+        "what's up",
+        "howdy",
+        "greetings",
+        "hey jarvis",
+        "hello jarvis",
+        "hi jarvis",
+        "yo",
+        "hiya",
+        "sup"
+      ],
+      "keywords": ["hello", "hi", "hey", "howdy", "greetings", "morning", "afternoon", "evening", "hiya", "sup"]
+    },
+    {
+      "name": "farewell",
+      "description": "User says goodbye",
+      "examples": [
+        "goodbye",
+        "bye",
+        "see you later",
+        "see ya",
+        "good night",
+        "later",
+        "take care",
+        "bye bye",
+        "catch you later",
+        "have a good day",
+        "have a nice day",
+        "talk to you later",
+        "I'm going now",
+        "gotta go",
+        "peace out"
+      ],
+      "keywords": ["bye", "goodbye", "goodnight", "farewell", "later", "take care"]
+    },
+    {
+      "name": "help",
+      "description": "User asks for help or what the assistant can do",
+      "examples": [
+        "help",
+        "help me",
+        "what can you do",
+        "what are your capabilities",
+        "how do you work",
+        "what do you know",
+        "show me what you can do",
+        "what features do you have",
+        "how can you help me",
+        "I need help",
+        "can you help me",
+        "what commands do you support",
+        "instructions",
+        "guide me",
+        "what should I say"
+      ],
+      "keywords": ["help", "capabilities", "commands", "features", "instructions", "guide"]
+    },
+    {
+      "name": "thank_you",
+      "description": "User expresses gratitude",
+      "examples": [
+        "thank you",
+        "thanks",
+        "thanks a lot",
+        "thank you very much",
+        "much appreciated",
+        "I appreciate it",
+        "that's helpful",
+        "nice one",
+        "perfect",
+        "great",
+        "awesome",
+        "cool thanks",
+        "cheers"
+      ],
+      "keywords": ["thank", "thanks", "appreciate", "cheers", "grateful"]
+    },
+    {
+      "name": "affirm",
+      "description": "User confirms or agrees",
+      "examples": [
+        "yes",
+        "yeah",
+        "yep",
+        "sure",
+        "correct",
+        "absolutely",
+        "definitely",
+        "of course",
+        "right",
+        "that's right",
+        "exactly",
+        "affirmative",
+        "you bet",
+        "go ahead",
+        "do it",
+        "yes please",
+        "ok",
+        "okay"
+      ],
+      "keywords": ["yes", "yeah", "yep", "sure", "correct", "absolutely", "okay", "ok", "affirmative"]
+    },
+    {
+      "name": "deny",
+      "description": "User denies or disagrees",
+      "examples": [
+        "no",
+        "nope",
+        "nah",
+        "no thanks",
+        "not really",
+        "I don't think so",
+        "negative",
+        "no way",
+        "absolutely not",
+        "never",
+        "cancel",
+        "forget it",
+        "never mind",
+        "don't",
+        "stop"
+      ],
+      "keywords": ["no", "nope", "nah", "never", "negative", "cancel", "forget", "don't"]
+    },
+    {
+      "name": "chitchat",
+      "description": "General conversation, small talk, or questions not matching other intents",
+      "examples": [
+        "how are you",
+        "how's it going",
+        "what are you",
+        "who are you",
+        "who made you",
+        "tell me about yourself",
+        "are you a robot",
+        "are you real",
+        "what's your name",
+        "how old are you",
+        "do you have feelings",
+        "what do you think about",
+        "can you think",
+        "are you smart",
+        "that's interesting",
+        "I'm bored",
+        "talk to me",
+        "let's chat",
+        "say something",
+        "tell me something interesting"
+      ],
+      "keywords": []
+    },
+    {
+      "name": "tell_joke",
+      "description": "User asks for a joke or something funny",
+      "examples": [
+        "tell me a joke",
+        "say something funny",
+        "make me laugh",
+        "do you know any jokes",
+        "give me a joke",
+        "I need a laugh",
+        "tell me something funny",
+        "got any good jokes",
+        "crack a joke",
+        "humor me"
+      ],
+      "keywords": ["joke", "funny", "laugh", "humor", "humour"]
+    },
+    {
+      "name": "get_news",
+      "description": "User asks for news or current events",
+      "examples": [
+        "what's the news",
+        "any news today",
+        "tell me the latest news",
+        "what's happening in the world",
+        "give me the headlines",
+        "current events",
+        "what's going on today",
+        "any breaking news",
+        "news update",
+        "what's new today",
+        "read me the news"
+      ],
+      "keywords": ["news", "headlines", "current events", "breaking"]
+    },
+    {
+      "name": "search_web",
+      "description": "User asks to look something up or search online",
+      "examples": [
+        "search for",
+        "look up",
+        "google",
+        "find information about",
+        "what is",
+        "who is",
+        "tell me about",
+        "search the web for",
+        "can you look up",
+        "find out about",
+        "I want to know about",
+        "define",
+        "what does mean"
+      ],
+      "keywords": ["search", "google", "look up", "find", "define", "wikipedia"]
+    },
+    {
+      "name": "take_note",
+      "description": "User wants to save a note or memo",
+      "examples": [
+        "take a note",
+        "save a note",
+        "remember this",
+        "note this down",
+        "write this down",
+        "make a note",
+        "add a note",
+        "jot this down",
+        "memo",
+        "save this"
+      ],
+      "keywords": ["note", "memo", "remember", "write down", "jot"]
+    },
+    {
+      "name": "read_notes",
+      "description": "User wants to hear their saved notes",
+      "examples": [
+        "read my notes",
+        "what are my notes",
+        "show my notes",
+        "any notes",
+        "do I have any notes",
+        "read my memos",
+        "what did I save",
+        "show saved notes",
+        "list my notes"
+      ],
+      "keywords": ["read notes", "show notes", "list notes", "my notes", "saved notes"]
+    }
+  ]
+}

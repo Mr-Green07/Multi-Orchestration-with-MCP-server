@@ -1,0 +1,64 @@
+{
+  "intent": "weather",
+  "description": "Weather-related intents: current conditions and forecasts",
+  "intents": [
+    {
+      "name": "get_weather",
+      "description": "User asks about current weather conditions",
+      "examples": [
+        "what's the weather",
+        "what's the weather like",
+        "how's the weather",
+        "what's the temperature",
+        "how hot is it",
+        "how cold is it",
+        "is it raining",
+        "is it sunny",
+        "is it going to rain",
+        "what's the weather outside",
+        "weather report",
+        "current weather",
+        "what's the weather in Delhi",
+        "what's the weather in New York",
+        "what's the temperature in London",
+        "how's the weather in Mumbai",
+        "is it raining in Bangalore",
+        "tell me the weather",
+        "check the weather",
+        "weather update",
+        "what's the humidity",
+        "what's it like outside",
+        "do I need an umbrella",
+        "do I need a jacket",
+        "is it windy",
+        "how's the weather today"
+      ],
+      "keywords": ["weather", "temperature", "raining", "sunny", "cloudy", "humid", "windy", "umbrella", "forecast", "degrees"],
+      "entities": ["location", "date"]
+    },
+    {
+      "name": "get_forecast",
+      "description": "User asks about future weather predictions",
+      "examples": [
+        "what's the forecast",
+        "what's the weather tomorrow",
+        "will it rain tomorrow",
+        "weather this week",
+        "what's the weather going to be like this weekend",
+        "forecast for next week",
+        "is it going to snow",
+        "will it be sunny tomorrow",
+        "what's the 5 day forecast",
+        "weather forecast for Saturday",
+        "what's the weather for the next 3 days",
+        "will it rain this week",
+        "weekend weather",
+        "forecast for Delhi",
+        "what will the temperature be tomorrow",
+        "how will the weather be on Friday"
+      ],
+      "keywords": ["forecast", "tomorrow", "this week", "next week", "weekend", "predict", "upcoming"],
+      "entities": ["location", "date", "duration"]
+    }
+  ]
+}

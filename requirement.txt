@@ -1,0 +1,46 @@
+
+
+# Speech Recognition & Audio Processing (Primary)
+openai-whisper         # Speech-to-text model (local/offline)
+pyttsx3                # Offline TTS (Windows SAPI5 / eSpeak)
+silero==0.5.5 
+librosa>=0.10.0                   # Audio feature extraction
+scipy>=1.11.0                     # Scientific computing
+sounddevice
+
+# Web Framework & API
+fastapi>=0.104.1                  # Web framework for API endpoints
+uvicorn>=0.24.0                   # ASGI server for FastAPI
+python-multipart>=0.0.6           # File upload handling
+pydantic>=2.0.2                   # Data validation
+pydantic-settings>=2.0.0          # Settings management
+gradio                            # Python-native UI for the ASR frontend
+pyrefly
+
+# Audio Processing & Recording
+pyaudio>=0.2.14                   # Audio I/O
+numpy>=1.21.0                     # Numerical computing
+
+# Environment & Configuration
+python-dotenv==1.0.0              # Environment variable management
+pyyaml>=6.0                       # YAML configuration parsing
+
+# Caching (Optional for Phase 1, Required for Phase 2)
+redis==5.0.0                      # Redis server client
+
+# Database & ORM (Optional for Phase 1)
+sqlalchemy>=2.0.0                 # SQL toolkit and ORM
+alembic>=1.12.0                   # Database migrations
+
+# Utilities
+requests>=2.31.0                  # HTTP library
+cryptography>=41.0.0              # Cryptographic libraries
+loguru>=0.7.0                     # Logging library
+
+# ==================== DEVELOPMENT DEPENDENCIES ====================
+
+# Testing & Quality Assurance
+pytest==7.4.0                     # Unit testing framework
+pytest-asyncio==0.21.0            # Async test support
+black>=23.0.0                     # Code formatter
+flake8>=6.0.0                     # Code linter

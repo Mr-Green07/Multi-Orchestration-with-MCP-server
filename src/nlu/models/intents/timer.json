@@ -1,0 +1,164 @@
+{
+  "intent": "timer",
+  "description": "Timer, alarm, reminder, and time/date query intents",
+  "intents": [
+    {
+      "name": "set_timer",
+      "description": "User wants to set a countdown timer",
+      "examples": [
+        "set a timer",
+        "set a timer for 5 minutes",
+        "timer for 10 minutes",
+        "set a 30 second timer",
+        "start a timer for 1 hour",
+        "countdown 15 minutes",
+        "timer 2 minutes",
+        "put a timer on for 20 minutes",
+        "set a cooking timer for 45 minutes",
+        "give me a 3 minute timer",
+        "I need a timer for 10 minutes",
+        "can you set a timer",
+        "start a countdown",
+        "timer for half an hour",
+        "set timer for one and a half hours"
+      ],
+      "keywords": ["timer", "countdown"],
+      "entities": ["duration", "timer_label"]
+    },
+    {
+      "name": "cancel_timer",
+      "description": "User wants to cancel or delete a timer",
+      "examples": [
+        "cancel the timer",
+        "stop the timer",
+        "delete the timer",
+        "remove the timer",
+        "cancel all timers",
+        "turn off the timer",
+        "dismiss the timer",
+        "clear the timer",
+        "cancel my timer",
+        "get rid of the timer"
+      ],
+      "keywords": ["cancel timer", "stop timer", "delete timer", "remove timer", "dismiss timer"],
+      "entities": ["timer_label"]
+    },
+    {
+      "name": "check_timer",
+      "description": "User wants to know how much time is left",
+      "examples": [
+        "how much time is left",
+        "check the timer",
+        "timer status",
+        "how long on the timer",
+        "what's the timer at",
+        "is the timer still running",
+        "time remaining",
+        "show me the timer",
+        "how much longer",
+        "any active timers"
+      ],
+      "keywords": ["check timer", "time left", "timer status", "remaining", "how long"],
+      "entities": ["timer_label"]
+    },
+    {
+      "name": "set_alarm",
+      "description": "User wants to set an alarm for a specific time",
+      "examples": [
+        "set an alarm",
+        "set an alarm for 7 AM",
+        "alarm at 6:30",
+        "wake me up at 5",
+        "set an alarm for tomorrow morning",
+        "alarm for 8 PM",
+        "set a morning alarm",
+        "alarm at noon",
+        "set alarm for 9:15 AM",
+        "wake me up at 7 tomorrow",
+        "set a daily alarm for 6 AM",
+        "I need an alarm for 10 PM",
+        "can you set an alarm",
+        "alarm for midnight"
+      ],
+      "keywords": ["alarm", "wake me up", "wake up"],
+      "entities": ["time", "date", "recurrence"]
+    },
+    {
+      "name": "cancel_alarm",
+      "description": "User wants to cancel or delete an alarm",
+      "examples": [
+        "cancel the alarm",
+        "turn off the alarm",
+        "delete my alarm",
+        "remove the alarm",
+        "cancel all alarms",
+        "stop the alarm",
+        "dismiss the alarm",
+        "snooze the alarm",
+        "disable the alarm",
+        "no alarm tomorrow"
+      ],
+      "keywords": ["cancel alarm", "turn off alarm", "delete alarm", "stop alarm", "snooze", "dismiss alarm"],
+      "entities": ["time", "date"]
+    },
+    {
+      "name": "set_reminder",
+      "description": "User wants to be reminded about something",
+      "examples": [
+        "remind me to",
+        "set a reminder",
+        "remind me at 3 PM to call mom",
+        "reminder to take medicine at 9",
+        "don't let me forget to buy groceries",
+        "remind me in 30 minutes to check the oven",
+        "set a reminder for tomorrow",
+        "remind me about the meeting",
+        "I need a reminder",
+        "remind me to drink water every hour",
+        "set a reminder to pick up the kids at 4",
+        "can you remind me",
+        "remember to tell me about the delivery"
+      ],
+      "keywords": ["remind", "reminder", "don't forget", "remember"],
+      "entities": ["reminder_text", "time", "date", "duration", "recurrence"]
+    },
+    {
+      "name": "get_time",
+      "description": "User asks for the current time",
+      "examples": [
+        "what time is it",
+        "what's the time",
+        "tell me the time",
+        "current time",
+        "do you know what time it is",
+        "time please",
+        "what time is it in Tokyo",
+        "time in New York",
+        "what's the local time",
+        "what's the time right now"
+      ],
+      "keywords": ["time", "clock", "hour"],
+      "entities": ["location", "timezone"]
+    },
+    {
+      "name": "get_date",
+      "description": "User asks for the current date or day",
+      "examples": [
+        "what's today's date",
+        "what day is it",
+        "what's the date",
+        "tell me the date",
+        "what day of the week is it",
+        "is today Friday",
+        "what month is it",
+        "what year is it",
+        "what's tomorrow's date",
+        "when is next Monday",
+        "how many days until Christmas",
+        "what date is next Friday"
+      ],
+      "keywords": ["date", "day", "today", "month", "year"],
+      "entities": ["date"]
+    }
+  ]
+}

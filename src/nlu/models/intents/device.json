@@ -1,0 +1,127 @@
+{
+  "intent": "device",
+  "description": "Smart device control and system management intents",
+  "intents": [
+    {
+      "name": "device_on",
+      "description": "User wants to turn on a device",
+      "examples": [
+        "turn on the light",
+        "switch on the fan",
+        "turn on the AC",
+        "lights on",
+        "turn on bedroom light",
+        "switch on the TV",
+        "power on",
+        "turn the heater on",
+        "enable the lights",
+        "start the fan",
+        "turn on the kitchen light",
+        "living room lights on",
+        "turn on the lamp",
+        "activate the AC",
+        "switch on the air conditioner"
+      ],
+      "keywords": ["turn on", "switch on", "power on", "enable", "activate", "start"],
+      "entities": ["device_name", "device_location", "device_value"]
+    },
+    {
+      "name": "device_off",
+      "description": "User wants to turn off a device",
+      "examples": [
+        "turn off the light",
+        "switch off the fan",
+        "turn off the AC",
+        "lights off",
+        "turn off bedroom light",
+        "switch off the TV",
+        "power off",
+        "turn the heater off",
+        "disable the lights",
+        "stop the fan",
+        "turn off the kitchen light",
+        "living room lights off",
+        "turn off the lamp",
+        "deactivate the AC",
+        "kill the lights",
+        "shut off the air conditioner"
+      ],
+      "keywords": ["turn off", "switch off", "power off", "disable", "deactivate", "shut off", "kill"],
+      "entities": ["device_name", "device_location"]
+    },
+    {
+      "name": "device_status",
+      "description": "User asks about the status of a device",
+      "examples": [
+        "is the light on",
+        "is the AC running",
+        "check the thermostat",
+        "what's the temperature set to",
+        "is the fan on",
+        "are the lights on in the bedroom",
+        "status of the heater",
+        "is the TV on",
+        "what devices are on",
+        "check the living room lights",
+        "is anything running",
+        "show me device status"
+      ],
+      "keywords": ["is the", "status", "check", "running", "are the"],
+      "entities": ["device_name", "device_location"]
+    },
+    {
+      "name": "system_status",
+      "description": "User asks about the assistant's system status",
+      "examples": [
+        "system status",
+        "how are your systems",
+        "health check",
+        "run diagnostics",
+        "are you working properly",
+        "system info",
+        "what's your status",
+        "memory usage",
+        "CPU usage",
+        "how much battery",
+        "disk space",
+        "are all services running"
+      ],
+      "keywords": ["system status", "diagnostics", "health check", "system info"],
+      "entities": []
+    },
+    {
+      "name": "system_shutdown",
+      "description": "User wants to shut down the system or computer",
+      "examples": [
+        "shut down the computer",
+        "shutdown",
+        "power off the system",
+        "turn off the computer",
+        "shut down",
+        "hibernate",
+        "go to sleep mode",
+        "put the computer to sleep",
+        "shut it down",
+        "power down"
+      ],
+      "keywords": ["shutdown", "shut down", "power off", "hibernate", "sleep mode", "power down"],
+      "entities": []
+    },
+    {
+      "name": "system_restart",
+      "description": "User wants to restart the system",
+      "examples": [
+        "restart the computer",
+        "reboot",
+        "restart the system",
+        "reboot the machine",
+        "restart",
+        "reboot the PC",
+        "restart the server",
+        "do a restart"
+      ],
+      "keywords": ["restart", "reboot"],
+      "entities": []
+    }
+  ]
+}

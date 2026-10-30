@@ -1,0 +1,201 @@
+{
+  "version": "1.0.0",
+  "description": "Regex and keyword patterns for entity extraction from transcribed text",
+  "patterns": {
+    "time": {
+      "regex": [
+        "\\b(\\d{1,2})\\s*:\\s*(\\d{2})\\s*(AM|PM|am|pm|a\\.m\\.|p\\.m\\.)?\\b",
+        "\\b(\\d{1,2})\\s*(AM|PM|am|pm|a\\.m\\.|p\\.m\\.)\\b",
+        "\\b(\\d{1,2})\\s*o'?\\s*clock\\b",
+        "\\bhalf\\s+past\\s+(\\d{1,2})\\b",
+        "\\bquarter\\s+(to|past)\\s+(\\d{1,2})\\b"
+      ],
+      "keywords": {
+        "noon": "12:00 PM",
+        "midday": "12:00 PM",
+        "midnight": "12:00 AM",
+        "morning": "08:00 AM",
+        "afternoon": "02:00 PM",
+        "evening": "06:00 PM",
+        "night": "09:00 PM",
+        "dawn": "06:00 AM",
+        "dusk": "06:30 PM",
+        "sunrise": "06:00 AM",
+        "sunset": "06:30 PM"
+      }
+    },
+
+    "duration": {
+      "regex": [
+        "\\b(\\d+)\\s*(seconds?|secs?|s)\\b",
+        "\\b(\\d+)\\s*(minutes?|mins?|m)\\b",
+        "\\b(\\d+)\\s*(hours?|hrs?|h)\\b",
+        "\\b(\\d+)\\s*hours?\\s*(and)?\\s*(\\d+)\\s*minutes?\\b",
+        "\\bhalf\\s+(an?\\s+)?hour\\b",
+        "\\b(a|one)\\s+and\\s+a\\s+half\\s+hours?\\b",
+        "\\bquarter\\s+(of\\s+)?(an?\\s+)?hour\\b",
+        "\\b(a|an|one)\\s+(second|minute|hour)\\b",
+        "\\b(\\d+\\.\\d+)\\s*(hours?|minutes?|seconds?)\\b"
+      ],
+      "keywords": {
+        "half an hour": "30 minutes",
+        "half hour": "30 minutes",
+        "quarter hour": "15 minutes",
+        "quarter of an hour": "15 minutes",
+        "a moment": "1 minute",
+        "a bit": "5 minutes",
+        "a while": "15 minutes"
+      }
+    },
+
+    "date": {
+      "regex": [
+        "\\b(\\d{1,2})[\\/\\-](\\d{1,2})[\\/\\-](\\d{2,4})\\b",
+        "\\b(January|February|March|April|May|June|July|August|September|October|November|December)\\s+(\\d{1,2})(st|nd|rd|th)?\\b",
+        "\\b(\\d{1,2})(st|nd|rd|th)?\\s+(January|February|March|April|May|June|July|August|September|October|November|December)\\b",
+        "\\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s+(\\d{1,2})\\b",
+        "\\bnext\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\\b",
+        "\\bthis\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\\b",
+        "\\blast\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\\b"
+      ],
+      "keywords": {
+        "today": "relative:0",
+        "tomorrow": "relative:+1",
+        "yesterday": "relative:-1",
+        "day after tomorrow": "relative:+2",
+        "day before yesterday": "relative:-2",
+        "this week": "relative:this_week",
+        "next week": "relative:next_week",
+        "last week": "relative:last_week",
+        "this weekend": "relative:this_weekend",
+        "next weekend": "relative:next_weekend",
+        "this month": "relative:this_month",
+        "next month": "relative:next_month"
+      }
+    },
+
+    "recurrence": {
+      "regex": [
+        "\\bevery\\s+(\\d+)?\\s*(seconds?|minutes?|hours?|days?|weeks?|months?)\\b",
+        "\\bevery\\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\\b",
+        "\\bevery\\s+(morning|afternoon|evening|night)\\b"
+      ],
+      "keywords": {
+        "daily": "every 1 day",
+        "weekly": "every 1 week",
+        "hourly": "every 1 hour",
+        "monthly": "every 1 month",
+        "weekdays": "every weekday",
+        "weekends": "every weekend",
+        "twice a day": "every 12 hours",
+        "every other day": "every 2 days"
+      }
+    },
+
+    "number": {
+      "regex": [
+        "\\b(\\d+(?:\\.\\d+)?)\\b",
+        "\\b(\\d+)\\s*(?:percent|%)\\b"
+      ],
+      "word_to_number": {
+        "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4,
+        "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+        "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+        "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17,
+        "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30,
+        "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70,
+        "eighty": 80, "ninety": 90, "hundred": 100, "thousand": 1000,
+        "half": 0.5, "quarter": 0.25, "a dozen": 12
+      }
+    },
+
+    "volume_level": {
+      "regex": [
+        "\\b(\\d{1,3})\\s*(?:percent|%)?\\b"
+      ],
+      "keywords": {
+        "maximum": 100, "max": 100, "full": 100, "loudest": 100,
+        "minimum": 5, "min": 5, "lowest": 5, "quietest": 5,
+        "half": 50, "medium": 50, "moderate": 50,
+        "mute": 0, "silent": 0, "zero": 0,
+        "unmute": 50
+      }
+    },
+
+    "device_name": {
+      "keywords": {
+        "light": "light", "lights": "light", "lamp": "lamp", "lamps": "lamp",
+        "bulb": "light", "bulbs": "light",
+        "fan": "fan", "fans": "fan", "ceiling fan": "fan",
+        "AC": "air_conditioner", "air conditioner": "air_conditioner",
+        "air conditioning": "air_conditioner", "aircon": "air_conditioner",
+        "TV": "television", "television": "television", "telly": "television",
+        "heater": "heater", "heating": "heater", "radiator": "heater",
+        "speaker": "speaker", "speakers": "speaker",
+        "microwave": "microwave", "oven": "oven",
+        "washer": "washing_machine", "washing machine": "washing_machine",
+        "dryer": "dryer", "dishwasher": "dishwasher",
+        "door": "door", "garage": "garage_door",
+        "camera": "camera", "thermostat": "thermostat",
+        "blinds": "blinds", "curtains": "curtains",
+        "robot vacuum": "vacuum", "vacuum": "vacuum", "roomba": "vacuum"
+      }
+    },
+
+    "device_location": {
+      "keywords": {
+        "bedroom": "bedroom", "master bedroom": "master_bedroom",
+        "living room": "living_room", "lounge": "living_room",
+        "kitchen": "kitchen", "bathroom": "bathroom", "washroom": "bathroom",
+        "garage": "garage", "office": "office", "study": "office",
+        "hallway": "hallway", "corridor": "hallway",
+        "dining room": "dining_room", "basement": "basement",
+        "attic": "attic", "porch": "porch", "balcony": "balcony",
+        "backyard": "backyard", "garden": "garden",
+        "upstairs": "upstairs", "downstairs": "downstairs",
+        "guest room": "guest_room", "kids room": "kids_room",
+        "nursery": "nursery", "laundry room": "laundry_room"
+      }
+    },
+
+    "genre": {
+      "keywords": {
+        "rock": "rock", "pop": "pop", "jazz": "jazz",
+        "classical": "classical", "hip hop": "hip_hop", "hip-hop": "hip_hop",
+        "rap": "rap", "lo-fi": "lofi", "lofi": "lofi", "lo fi": "lofi",
+        "country": "country", "electronic": "electronic", "EDM": "electronic",
+        "metal": "metal", "heavy metal": "metal",
+        "R&B": "rnb", "r and b": "rnb", "rhythm and blues": "rnb",
+        "soul": "soul", "blues": "blues", "reggae": "reggae",
+        "folk": "folk", "indie": "indie", "alternative": "alternative",
+        "Bollywood": "bollywood", "bollywood": "bollywood",
+        "K-pop": "kpop", "kpop": "kpop", "k pop": "kpop",
+        "ambient": "ambient", "chill": "chill", "chillout": "chill",
+        "party": "party", "dance": "dance", "disco": "disco",
+        "Latin": "latin", "reggaeton": "reggaeton",
+        "punk": "punk", "grunge": "grunge",
+        "soundtrack": "soundtrack", "instrumental": "instrumental",
+        "acoustic": "acoustic", "unplugged": "acoustic"
+      }
+    },
+
+    "mood": {
+      "keywords": {
+        "happy": "happy", "cheerful": "happy", "joyful": "happy",
+        "sad": "sad", "melancholy": "melancholy", "gloomy": "sad",
+        "relaxing": "relaxing", "relaxed": "relaxing", "calm": "calm",
+        "peaceful": "calm", "soothing": "calm",
+        "energetic": "energetic", "pumped": "energetic", "hyped": "energetic",
+        "romantic": "romantic", "love": "romantic",
+        "angry": "angry", "aggressive": "angry",
+        "upbeat": "upbeat", "fun": "upbeat", "lively": "upbeat",
+        "chill": "chill", "laid back": "chill",
+        "focus": "focus", "study": "focus", "concentration": "focus",
+        "motivational": "motivational", "inspiring": "motivational",
+        "party": "party", "celebration": "party",
+        "sleepy": "sleepy", "bedtime": "sleepy", "lullaby": "sleepy",
+        "workout": "workout", "exercise": "workout", "gym": "workout"
+      }
+    }
+  }
+}

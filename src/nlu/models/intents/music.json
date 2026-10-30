@@ -1,0 +1,180 @@
+{
+  "intent": "music",
+  "description": "Music playback control intents",
+  "intents": [
+    {
+      "name": "play_music",
+      "description": "User wants to play music, a song, artist, or genre",
+      "examples": [
+        "play music",
+        "play some music",
+        "play a song",
+        "play Bohemian Rhapsody",
+        "play something by Arijit Singh",
+        "play some jazz",
+        "play rock music",
+        "play lo-fi",
+        "play hip hop",
+        "put on some music",
+        "I want to listen to music",
+        "play my playlist",
+        "play my favorites",
+        "shuffle my music",
+        "play something relaxing",
+        "play party music",
+        "play workout music",
+        "play classical music",
+        "play some Bollywood songs",
+        "play the latest hits",
+        "can you play a song",
+        "I want to hear some music",
+        "start playing music"
+      ],
+      "keywords": ["play", "song", "music", "listen", "playlist", "shuffle", "artist", "album", "track"],
+      "entities": ["song_name", "artist_name", "genre", "playlist_name", "mood"]
+    },
+    {
+      "name": "stop_music",
+      "description": "User wants to stop music entirely",
+      "examples": [
+        "stop the music",
+        "stop playing",
+        "turn off the music",
+        "silence",
+        "kill the music",
+        "shut it off",
+        "enough music",
+        "stop the song",
+        "end playback",
+        "that's enough",
+        "quit playing"
+      ],
+      "keywords": ["stop", "kill", "silence", "shut off", "end", "quit"],
+      "entities": []
+    },
+    {
+      "name": "pause_music",
+      "description": "User wants to pause the current track",
+      "examples": [
+        "pause",
+        "pause the music",
+        "pause the song",
+        "hold on",
+        "wait a moment",
+        "freeze the music",
+        "pause playback",
+        "hold the music"
+      ],
+      "keywords": ["pause", "hold", "freeze"],
+      "entities": []
+    },
+    {
+      "name": "resume_music",
+      "description": "User wants to resume paused music",
+      "examples": [
+        "resume",
+        "resume the music",
+        "continue playing",
+        "unpause",
+        "carry on",
+        "keep playing",
+        "start again",
+        "go on",
+        "continue the song",
+        "play again"
+      ],
+      "keywords": ["resume", "continue", "unpause", "carry on"],
+      "entities": []
+    },
+    {
+      "name": "next_track",
+      "description": "User wants to skip to the next song",
+      "examples": [
+        "next",
+        "next song",
+        "skip",
+        "skip this",
+        "next track",
+        "play the next one",
+        "I don't like this song",
+        "skip this song",
+        "change the song",
+        "play something else"
+      ],
+      "keywords": ["next", "skip", "forward"],
+      "entities": []
+    },
+    {
+      "name": "previous_track",
+      "description": "User wants to go back to the previous song",
+      "examples": [
+        "previous",
+        "previous song",
+        "go back",
+        "last song",
+        "play the previous one",
+        "previous track",
+        "replay",
+        "play that again",
+        "back",
+        "rewind"
+      ],
+      "keywords": ["previous", "back", "last", "rewind", "replay"],
+      "entities": []
+    },
+    {
+      "name": "volume_up",
+      "description": "User wants to increase volume",
+      "examples": [
+        "volume up",
+        "louder",
+        "turn it up",
+        "increase volume",
+        "make it louder",
+        "crank it up",
+        "I can't hear",
+        "raise the volume",
+        "more volume",
+        "boost the volume"
+      ],
+      "keywords": ["louder", "volume up", "increase", "raise", "crank up", "boost"],
+      "entities": []
+    },
+    {
+      "name": "volume_down",
+      "description": "User wants to decrease volume",
+      "examples": [
+        "volume down",
+        "quieter",
+        "turn it down",
+        "decrease volume",
+        "make it quieter",
+        "lower the volume",
+        "too loud",
+        "softer",
+        "reduce the volume",
+        "tone it down"
+      ],
+      "keywords": ["quieter", "volume down", "decrease", "lower", "softer", "reduce"],
+      "entities": []
+    },
+    {
+      "name": "set_volume",
+      "description": "User wants to set volume to a specific level",
+      "examples": [
+        "set volume to 50",
+        "volume 80 percent",
+        "set volume to maximum",
+        "set volume to minimum",
+        "volume at 30",
+        "put volume on 70",
+        "mute",
+        "unmute",
+        "set volume to half",
+        "full volume"
+      ],
+      "keywords": ["set volume", "mute", "unmute", "volume to"],
+      "entities": ["volume_level"]
+    }
+  ]
+}

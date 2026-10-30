@@ -1,0 +1,29 @@
+# Example user‑prompt samples per intent
+# -------------------------------------------------
+# These are *not* system prompts – they are realistic user
+# messages you can feed into the model for testing or demo
+# purposes. Feel free to add, edit or delete entries as
+# your application evolves.
+# -------------------------------------------------
+
+greeting:
+  - "Hi there! How are you today?"
+  - "Hey, can you tell me a joke?"
+
+question:
+  - "What is the capital of France?"
+  - "How does a transformer model work?"
+  - "Can you explain the difference between supervised and unsupervised learning?"
+
+command:
+  - "Please list all files in the current directory."
+  - "Convert the following audio file to text."
+  - "Play the sound ‘ding.wav’."
+
+fallback:
+  - "I didn't understand that. Could you rephrase?"
+  - "Sorry, can you say that again?"
+
+error_handling:
+  - "The microphone seems to be disconnected. What should I do?"
+  - "My audio file is corrupted – any suggestions?"

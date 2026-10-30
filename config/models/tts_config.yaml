@@ -1,0 +1,172 @@
+# Text-to-Speech (TTS) Configuration
+# Configures the text-to-speech engine for the voice assistant platform
+
+# Engine selection and general settings
+engine:
+  # Supported engines: 'google', 'azure', 'aws', 'pyttsx3', 'gtts', 'espeak'
+  type: 'pyttsx3'
+  
+  # API endpoint (for cloud-based engines)
+  endpoint: null
+  
+  # Enable/disable TTS functionality
+  enabled: true
+  
+  # Request timeout in seconds (for API-based engines)
+  timeout: 30
+
+# Audio output configuration
+audio:
+  # Output format: 'mp3', 'wav', 'ogg', 'flac'
+  format: 'mp3'
+  
+  # Sample rate in Hz (16000, 22050, 44100, 48000)
+  sample_rate: 22050
+  
+  # Audio channels: 1 (mono), 2 (stereo)
+  channels: 1
+  
+  # Bit rate for compressed formats (e.g., 128 for mp3)
+  bitrate: '128k'
+  
+  # Output directory for generated audio files
+  output_dir: 'data/cache/tts_audio'
+  
+  # Enable audio streaming (stream response instead of buffering)
+  streaming: false
+
+# Voice configuration
+voice:
+  # Language code (e.g., 'en-US', 'en-GB', 'es-ES', 'fr-FR')
+  language: 'en-US'
+  
+  # Voice name/ID (engine-specific, e.g., 'en-US-Neural2-C')
+  # Leave empty for default voice
+  voice_id: null
+  
+  # Gender preference: 'male', 'female', 'neutral'
+  gender: 'neutral'
+  
+  # Speech rate (0.5 = 50% speed, 1.0 = normal, 2.0 = 2x speed)
+  rate: 1.0
+  
+  # Pitch adjustment (-20.0 to 20.0, or engine-specific range)
+  pitch: 0.0
+  
+  # Volume (0.0 to 1.0)
+  volume: 1.0
+
+# Quality and performance settings
+quality:
+  # Quality level: 'low', 'medium', 'high'
+  level: 'high'
+  
+  # Use neural voices if available (typically higher quality, slower)
+  use_neural: true
+  
+  # Maximum text length per request (prevent timeouts on very long texts)
+  max_text_length: 5000
+  
+  # Enable SSML (Speech Synthesis Markup Language) support
+  enable_ssml: true
+
+# Caching and performance
+cache:
+  # Enable caching of synthesized audio
+  enabled: true
+  
+  # Cache directory
+  cache_dir: 'data/cache/tts'
+  
+  # Cache expiration time in seconds (0 = no expiration)
+  ttl: 2592000  # 30 days
+  
+  # Maximum cache size in MB (0 = unlimited)
+  max_size_mb: 500
+
+# need to be changed
+# Cloud provider credentials (for Google Cloud, Azure, AWS)
+providers:
+  google:
+    # Google Cloud project ID
+    project_id: null
+    
+    # Path to service account JSON key file
+    credentials_path: null
+    
+    # Enable Google Cloud TTS
+    enabled: false
+  
+  azure:
+    # Azure subscription key
+    api_key: null
+    
+    # Azure region (e.g., 'eastus', 'westeurope')
+    region: null
+    
+    # Enable Azure TTS
+    enabled: false
+  
+  aws:
+    # AWS access key ID
+    access_key: null
+    
+    # AWS secret access key
+    secret_key: null
+    
+    # AWS region (e.g., 'us-east-1')
+    region: 'us-east-1'
+    
+    # Enable AWS Polly TTS
+    enabled: false
+
+# Error handling and retry logic
+error_handling:
+  # Maximum retries for failed requests
+  max_retries: 3
+  
+  # Retry backoff multiplier (exponential backoff)
+  backoff_multiplier: 2.0
+  
+  # Initial retry delay in seconds
+  initial_retry_delay: 1.0
+  
+  # Fallback text if TTS fails
+  use_fallback: true
+  
+  # Log errors
+  log_errors: true
+
+# Logging configuration
+logging:
+  # Log level: 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+  level: 'INFO'
+  
+  # Log TTS requests and responses
+  log_requests: false
+  
+  # Log performance metrics
+  log_metrics: true
+
+# Advanced settings
+advanced:
+  # Text preprocessing
+  preprocess_text: true
+  
+  # Normalize punctuation and numbers
+  normalize_text: true
+  
+  # Replace common abbreviations
+  expand_abbreviations: true
+  
+  # Use phonetic spelling for difficult words
+  use_phonetics: false
+  
+  # Batch processing: process multiple texts simultaneously
+  batch_processing: false
+  
+  # Batch size for batch processing
+  batch_size: 10
+  
+  # Parallel requests (for API-based engines)
+  parallel_requests: 1

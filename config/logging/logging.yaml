@@ -1,0 +1,94 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  detailed:
+    format: '%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(funcName)s() - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  json:
+    format: '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s", "module": "%(filename)s", "line": %(lineno)d}'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: standard
+    stream: ext://sys.stdout
+  
+  file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: 'data/logs/app.log'
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf-8
+  
+  error_file:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: detailed
+    filename: 'data/logs/error.log'
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf-8
+  
+  performance_file:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: 'data/logs/performance.log'
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf-8
+
+loggers:
+  voice_assistant:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  voice_assistant.asr:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  voice_assistant.nlu:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  voice_assistant.llm:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  voice_assistant.tts:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  voice_assistant.api:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+  
+  voice_assistant.performance:
+    level: INFO
+    handlers: [performance_file]
+    propagate: false
+  
+  werkzeug:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console, file, error_file]

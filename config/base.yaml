@@ -1,0 +1,11 @@
+asr:
+  # The application loader will check for an environment variable first, 
+  # otherwise it falls back to "medium".
+  model_size: "medium" 
+  device: "cuda"
+  download_root: "./offline_models"
+
+llm:
+  provider: "ollama"
+  model_name: "gemma2:2b-it-qat"
+  base_url: "http://localhost:11434"

@@ -1,0 +1,134 @@
+{
+  "version": "1.0.0",
+  "description": "Entity type definitions for NLU extraction",
+  "entities": [
+    {
+      "name": "location",
+      "type": "free_text",
+      "description": "City, country, or place name",
+      "examples": ["Delhi", "New York", "London", "Mumbai", "Tokyo", "Paris", "Bangalore", "home", "office"]
+    },
+    {
+      "name": "date",
+      "type": "temporal",
+      "description": "Calendar date, relative or absolute",
+      "examples": ["today", "tomorrow", "yesterday", "next Monday", "this Friday", "January 5th", "next week", "this weekend", "day after tomorrow"]
+    },
+    {
+      "name": "time",
+      "type": "temporal",
+      "description": "Time of day, 12/24-hour formats",
+      "examples": ["7 AM", "3:30 PM", "noon", "midnight", "6:15", "9 o'clock", "half past 5", "quarter to 8", "morning", "evening", "night"]
+    },
+    {
+      "name": "duration",
+      "type": "temporal",
+      "description": "Length of time",
+      "examples": ["5 minutes", "1 hour", "30 seconds", "half an hour", "2 hours and 30 minutes", "one and a half hours", "a minute", "10 mins", "3 hrs"]
+    },
+    {
+      "name": "recurrence",
+      "type": "temporal",
+      "description": "Recurring schedule pattern",
+      "examples": ["daily", "every day", "every morning", "weekdays", "weekends", "every Monday", "hourly", "every hour", "every 30 minutes", "weekly"]
+    },
+    {
+      "name": "song_name",
+      "type": "free_text",
+      "description": "Title of a song or track",
+      "examples": ["Bohemian Rhapsody", "Shape of You", "Blinding Lights", "Tum Hi Ho", "Imagine"]
+    },
+    {
+      "name": "artist_name",
+      "type": "free_text",
+      "description": "Name of a musician or band",
+      "examples": ["Arijit Singh", "Taylor Swift", "Shreya Ghoshal", "Pawan Singh", "Ed Sheeran", "The Beatles", "AR Rahman"]
+    },
+    {
+      "name": "genre",
+      "type": "enum",
+      "description": "Music genre or style",
+      "values": ["rock", "pop", "jazz", "classical", "hip hop", "rap", "lo-fi", "lofi", "country", "electronic", "EDM", "metal", "R&B", "soul", "blues", "reggae", "folk", "indie", "Bollywood", "K-pop", "ambient", "chill", "party"]
+    },
+    {
+      "name": "playlist_name",
+      "type": "free_text",
+      "description": "Name of a playlist",
+      "examples": ["my favorites", "workout playlist", "chill vibes", "road trip", "study music", "party mix"]
+    },
+    {
+      "name": "mood",
+      "type": "enum",
+      "description": "Emotional state / vibe for music selection",
+      "values": ["happy", "sad", "relaxing", "energetic", "calm", "romantic", "angry", "melancholy", "upbeat", "chill", "focus", "motivational", "party"]
+    },
+    {
+      "name": "volume_level",
+      "type": "numeric",
+      "description": "Volume level as a number or word",
+      "range": [0, 100],
+      "examples": ["50", "80 percent", "maximum", "minimum", "half", "full", "mute", "zero", "100"]
+    },
+    {
+      "name": "device_name",
+      "type": "free_text",
+      "description": "Name of a smart device or appliance",
+      "examples": ["light", "lights", "fan", "AC", "air conditioner", "TV", "television", "heater", "speaker", "lamp", "bedroom light", "kitchen fan", "living room AC"]
+    },
+    {
+      "name": "device_location",
+      "type": "free_text",
+      "description": "Room or location of a device",
+      "examples": ["bedroom", "kitchen", "living room", "bathroom", "garage", "office", "hallway", "dining room", "basement", "upstairs", "downstairs"]
+    },
+    {
+      "name": "device_state",
+      "type": "enum",
+      "description": "Desired state of a device",
+      "values": ["on", "off", "bright", "dim", "low", "high", "medium", "warm", "cool", "auto"]
+    },
+    {
+      "name": "device_value",
+      "type": "numeric",
+      "description": "Numeric value for device settings (brightness, temperature, etc.)",
+      "range": [0, 100],
+      "examples": ["50", "75 percent", "22 degrees", "30"]
+    },
+    {
+      "name": "timer_label",
+      "type": "free_text",
+      "description": "Optional label for a timer",
+      "examples": ["cooking timer", "laundry timer", "egg timer", "workout timer", "break timer"]
+    },
+    {
+      "name": "reminder_text",
+      "type": "free_text",
+      "description": "The content of what to be reminded about",
+      "examples": ["call mom", "take medicine", "buy groceries", "pick up kids", "submit report", "drink water"]
+    },
+    {
+      "name": "timezone",
+      "type": "enum",
+      "description": "Timezone identifier",
+      "values": ["IST", "EST", "PST", "CST", "MST", "GMT", "UTC", "CET", "JST", "AEST"]
+    },
+    {
+      "name": "number",
+      "type": "numeric",
+      "description": "Generic numeric value",
+      "examples": ["1", "5", "10", "100", "fifty", "a dozen", "thousand"]
+    },
+    {
+      "name": "search_query",
+      "type": "free_text",
+      "description": "The topic or query to search for",
+      "examples": ["Python programming", "capital of France", "how to cook pasta", "Albert Einstein", "quantum physics"]
+    },
+    {
+      "name": "note_content",
+      "type": "free_text",
+      "description": "Content of a note to save",
+      "examples": ["meeting at 3 PM", "grocery list: milk eggs bread", "password for wifi", "idea for project"]
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+# ASR (Automatic Speech Recognition) Model Configuration
+
+# Model Settings
+model:
+  name: "openai/whisper-base"
+  type: "transformer"
+  device: "cuda"  # Options: cuda, cpu
+  precision: "float32"  # Options: float32, float16, bfloat16
+  batch_size: 1
+  max_audio_length: 30  # seconds
+
+# Audio Processing
+audio:
+  sample_rate: 16000  # Hz
+  mono: true
+  normalize: true
+  frame_length: 25  # milliseconds
+  frame_shift: 10  # milliseconds
+  n_mels: 80
+  n_fft: 400
+  hop_length: 160
+  fmin: 50
+  fmax: 7600
+  # Preprocessing
+  remove_silence: true
+  silence_threshold: -40  # dB
+  min_silence_duration: 0.3  # seconds
+
+# Feature Extraction
+features:
+  type: "mel_spectrogram"
+  n_features: 128
+  normalize_features: true
+  use_cmn: true  # Cepstral Mean Normalization
+  use_cmvn: true  # Cepstral Mean-Variance Normalization
+
+# Model Input/Output
+input:
+  feature_type: "mel_spectrogram"
+  sequence_length: 3000  # frames
+  padding: "pad"  # Options: pad, truncate
+
+output:
+  vocabulary_size: 10000
+  eos_token: "</s>"
+  sos_token: "<s>"
+  unk_token: "<unk>"
+  pad_token: "<pad>"
+
+# Decoding
+decoding:
+  strategy: "beam_search"  # Options: greedy, beam_search, ctc_beam_search
+  beam_width: 5
+  beam_search_beta: 2.5
+  beam_search_alpha: 0.6
+  length_penalty: 1.0
+  temperature: 1.0
+  top_k: 50
+  top_p: 0.9
+  min_prob: 0.0001
+
+# Language Model (optional)
+language_model:
+  enabled: false
+  path: null
+  weight: 0.3  # Interpolation weight
+  type: "ngram"  # Options: ngram, neural
+
+# Post-processing
+post_processing:
+  lowercase: true
+  remove_punctuation: false
+  remove_extra_spaces: true
+  character_coverage: 0.95
+
+# Performance
+performance:
+  num_workers: 4
+  pin_memory: true
+  mixed_precision: false
+  gradient_checkpointing: false
+
+# Inference
+inference:
+  timeout: 30  # seconds
+  confidence_threshold: 0.0
+  alternative_transcriptions: 3
+  return_confidence: true
+
+# Logging and Monitoring
+logging:
+  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  save_outputs: true
+  output_dir: "data/logs/asr"
+
+# Training (if applicable)
+training:
+  enabled: false
+  epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "adam"
+  scheduler: "cosine"
+  warmup_steps: 1000
+  gradient_accumulation_steps: 1
+  mixed_precision: false

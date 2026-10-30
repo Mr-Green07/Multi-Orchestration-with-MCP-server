@@ -1,0 +1,41 @@
+audio:
+  sample_rate: 16000
+  frame_ms: 30
+  preroll_ms: 1000          # audio kept from BEFORE the wake word so first words are not clipped
+  device_name: null          # substring of mic name (see sd.query_devices()); null = OS default
+  queue_max_chunks: 100      # callback->consumer queue bound; overflow drops oldest
+
+wakeword:
+  model: "hey_jarvis"         # built-in name or path to custom .onnx
+  threshold: 0.25              # score threshold for detection
+  speaking_threshold: 0.75   # higher bar while TTS is playing (barge-in)
+  consecutive_frames: 2      # N frames above threshold before firing
+  cooldown_s: 2.0            # refractory period after a detection
+
+vad:
+  model_path: "scripts/models/silero_vad.onnx"  # path to Silero VAD v5 onnx model
+  speech_threshold: 0.3      # probability to enter speech (lowered for sensitivity)
+  exit_threshold: 0.2        # probability below which silence is counted
+  start_frames: 2            # consecutive frames above threshold to confirm speech
+  endpoint_silence_ms: 800   # silence duration to trigger endpoint
+  no_speech_timeout_s: 10.0  # timeout if no speech detected after wake
+  max_utterance_s: 20.0      # force endpoint after this many seconds
+  pre_speech_pad_ms: 300     # audio to prepend before confirmed speech onset
+
+asr:
+  model: base                # tiny | base | small | medium | large
+  device: cpu                # cpu | cuda
+  language: en               # language code; null for auto-detect
+
+llm:
+  provider: ollama
+  model_name: gemma4:e2b-it-qat
+  base_url: http://localhost:11434
+
+tts:
+  sample_rate: 22050         # must match Playback's src_rate
+  rate: 175                  # speech rate in words-per-minute
+  volume: 0.9                # 0.0 – 1.0
+  voice_id: null             # null = OS default voice
+
+

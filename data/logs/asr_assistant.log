@@ -1,0 +1,262 @@
+2026-07-10 19:24:24.626 | INFO     | logging:callHandlers:1762 - Starting Antigravity Voice Assistant...
+2026-07-10 19:24:24.631 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-10 19:24:33.019 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-10 19:24:33.020 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-10 19:24:35.088 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-10 19:24:35.089 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-10 19:24:35.109 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from E:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-10 19:24:35.110 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-10 19:24:35.144 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-10 19:24:35.549 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-10 19:24:35.556 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-10 19:24:35.666 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-10 19:24:35.666 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-10 19:24:36.169 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-10 19:24:36.170 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-10 19:24:36.170 | INFO     | logging:callHandlers:1762 - Initializing Audio Pipeline (Wake -> VAD)...
+2026-07-10 19:24:36.171 | WARNING  | logging:callHandlers:1762 - src.asr.pipeline module not found. The pipeline will not run.
+2026-07-10 19:24:36.171 | INFO     | logging:callHandlers:1762 - This is the main entry point for the always-on voice assistant.
+2026-07-23 12:46:36.734 | INFO     | logging:callHandlers:1762 - Starting Antigravity Voice Assistant...
+2026-07-23 12:46:36.737 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-23 12:46:43.991 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-23 12:46:43.992 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-23 12:46:45.367 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-23 12:46:45.367 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-23 12:46:45.393 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from e:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 12:46:45.395 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-23 12:46:45.411 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-23 12:46:45.801 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 12:46:45.801 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-23 12:46:45.903 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 12:46:45.904 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 12:46:46.011 | INFO     | logging:callHandlers:1762 - Could not import comtypes.gen._C866CA3A_32F7_11D2_9602_00C04F8EE628_0_5_4: Typelib different than module
+2026-07-23 12:46:46.016 | INFO     | logging:callHandlers:1762 - # Generating comtypes.gen._C866CA3A_32F7_11D2_9602_00C04F8EE628_0_5_4
+2026-07-23 12:46:46.206 | INFO     | logging:callHandlers:1762 - # Generating comtypes.gen.SpeechLib
+2026-07-23 12:46:46.920 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 12:46:46.920 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-23 12:46:46.920 | INFO     | logging:callHandlers:1762 - Initializing Audio Pipeline (Wake -> VAD)...
+2026-07-23 12:46:46.922 | WARNING  | logging:callHandlers:1762 - src.asr.pipeline module not found. The pipeline will not run.
+2026-07-23 12:46:46.922 | INFO     | logging:callHandlers:1762 - This is the main entry point for the always-on voice assistant.
+2026-07-23 14:00:44.501 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-23 14:00:47.809 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-23 14:00:47.809 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-23 14:00:48.581 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-23 14:00:48.878 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-23 14:00:48.878 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-23 14:00:48.895 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from e:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 14:00:48.895 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-23 14:00:48.904 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-23 14:00:49.118 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 14:00:49.119 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-23 14:00:49.191 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 14:00:49.192 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 14:00:49.389 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 14:00:49.389 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-23 14:00:50.731 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-23 14:00:50.732 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-23 14:00:51.559 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-23 14:00:51.559 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-23 14:00:51.570 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from E:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 14:00:51.571 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-23 14:00:51.579 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-23 14:00:51.727 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 14:00:51.728 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-23 14:00:51.779 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 14:00:51.779 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 14:00:51.875 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 14:00:51.875 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-23 14:01:13.104 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-23 14:01:15.026 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-23 14:01:15.027 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-23 14:01:15.658 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-23 14:01:15.659 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-23 14:01:15.670 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from e:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 14:01:15.670 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-23 14:01:15.675 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-23 14:01:15.851 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 14:01:15.851 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-23 14:01:15.902 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 14:01:15.903 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 14:01:16.001 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 14:01:16.002 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-23 14:01:17.624 | INFO     | logging:callHandlers:1762 - Pipeline starting…
+2026-07-23 14:01:17.626 | INFO     | logging:callHandlers:1762 - Audio loop started (wake=ON)
+2026-07-23 14:01:17.626 | INFO     | logging:callHandlers:1762 - Main loop started — waiting for events
+2026-07-23 14:01:17.839 | INFO     | logging:callHandlers:1762 - mic open: device=None rate=16000
+2026-07-23 14:02:35.810 | INFO     | logging:callHandlers:1762 - KeyboardInterrupt — shutting down pipeline
+2026-07-23 14:02:35.901 | INFO     | logging:callHandlers:1762 - Audio loop exited
+2026-07-23 14:02:35.901 | INFO     | logging:callHandlers:1762 - Pipeline stopped
+2026-07-23 14:07:40.828 | INFO     | logging:callHandlers:1762 - Starting Antigravity Voice Assistant...
+2026-07-23 14:07:40.831 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-23 14:07:45.664 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-23 14:07:45.665 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-23 14:07:47.071 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-23 14:07:47.072 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-23 14:07:47.095 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from e:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 14:07:47.096 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-23 14:07:47.111 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-23 14:07:47.352 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 14:07:47.353 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-23 14:07:47.439 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 14:07:47.440 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 14:07:47.674 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 14:07:47.675 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-23 14:07:47.676 | INFO     | logging:callHandlers:1762 - Initializing Audio Pipeline (Wake -> VAD)...
+2026-07-23 14:07:51.407 | INFO     | logging:callHandlers:1762 - Pipeline started. Wake word detection is ENABLED.
+2026-07-23 14:07:51.407 | INFO     | logging:callHandlers:1762 - Pipeline starting…
+2026-07-23 14:07:51.409 | INFO     | logging:callHandlers:1762 - Audio loop started (wake=ON)
+2026-07-23 14:07:51.410 | INFO     | logging:callHandlers:1762 - Main loop started — waiting for events
+2026-07-23 14:07:51.674 | INFO     | logging:callHandlers:1762 - mic open: device=None rate=16000
+2026-07-23 14:19:20.920 | INFO     | logging:callHandlers:1762 - KeyboardInterrupt — shutting down pipeline
+2026-07-23 14:19:21.015 | INFO     | logging:callHandlers:1762 - Audio loop exited
+2026-07-23 14:19:21.016 | INFO     | logging:callHandlers:1762 - Pipeline stopped
+2026-07-23 15:35:36.536 | INFO     | logging:callHandlers:1762 - Starting Antigravity Voice Assistant...
+2026-07-23 15:35:36.543 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-23 15:35:42.635 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-23 15:35:42.636 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-23 15:35:44.217 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-23 15:35:44.218 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-23 15:35:44.238 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from e:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 15:35:44.240 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-23 15:35:44.253 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-23 15:35:44.471 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 15:35:44.472 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-23 15:35:44.569 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 15:35:44.570 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 15:35:44.841 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 15:35:44.842 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-23 15:35:44.842 | INFO     | logging:callHandlers:1762 - Initializing Audio Pipeline (Wake -> VAD)...
+2026-07-23 15:35:48.753 | INFO     | logging:callHandlers:1762 - Pipeline started. Wake word detection is ENABLED.
+2026-07-23 15:35:48.754 | INFO     | logging:callHandlers:1762 - Pipeline starting…
+2026-07-23 15:35:48.757 | INFO     | logging:callHandlers:1762 - Audio loop started (wake=ON)
+2026-07-23 15:35:48.758 | INFO     | logging:callHandlers:1762 - Main loop started — waiting for events
+2026-07-23 15:35:49.042 | INFO     | logging:callHandlers:1762 - mic open: device=None rate=16000
+2026-07-23 15:44:59.434 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from E:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 15:44:59.437 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 15:44:59.523 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 15:44:59.524 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 15:44:59.705 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 15:44:59.863 | INFO     | logging:callHandlers:1762 - WhisperModelManager initialized: model=small, device=cuda, language=en
+2026-07-23 15:45:00.556 | INFO     | logging:callHandlers:1762 - HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-07-23 15:45:01.645 | INFO     | logging:callHandlers:1762 - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-07-23 15:45:54.004 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from E:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 15:45:54.007 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 15:45:54.070 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 15:45:54.071 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 15:45:54.220 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 15:45:54.363 | INFO     | logging:callHandlers:1762 - WhisperModelManager initialized: model=small, device=cuda, language=en
+2026-07-23 15:45:55.120 | INFO     | logging:callHandlers:1762 - HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-07-23 15:45:56.394 | INFO     | logging:callHandlers:1762 - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-07-23 15:46:42.590 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from E:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 15:46:42.594 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 15:46:42.670 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 15:46:42.672 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 15:46:42.829 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 15:46:42.975 | INFO     | logging:callHandlers:1762 - WhisperModelManager initialized: model=small, device=cuda, language=en
+2026-07-23 15:46:43.697 | INFO     | logging:callHandlers:1762 - HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-07-23 15:46:44.883 | INFO     | logging:callHandlers:1762 - HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-07-23 15:46:45.851 | INFO     | logging:callHandlers:1762 - HTTP Request: GET http://localhost:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-07-23 15:46:47.936 | INFO     | logging:callHandlers:1762 - HTTP Request: HEAD http://localhost:7860/ "HTTP/1.1 200 OK"
+2026-07-23 15:46:48.292 | INFO     | logging:callHandlers:1762 - HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-07-23 15:47:10.958 | INFO     | logging:callHandlers:1762 - Loading Whisper model: small on cuda...
+2026-07-23 15:47:16.511 | INFO     | logging:callHandlers:1762 - Successfully loaded small model (~244 MB) on cuda
+2026-07-23 15:47:18.511 | ERROR    | logging:callHandlers:1762 - Assistant generation failed: 'TextPreprocessor' object has no attribute 'process'
+2026-07-23 15:47:18.878 | INFO     | logging:callHandlers:1762 - Model already loaded, returning cached instance.
+2026-07-23 15:47:19.696 | ERROR    | logging:callHandlers:1762 - Assistant generation failed: 'TextPreprocessor' object has no attribute 'process'
+2026-07-23 16:07:17.593 | INFO     | logging:callHandlers:1762 - wake fired (score=0.48 thr=0.25)
+2026-07-23 16:07:17.606 | INFO     | logging:callHandlers:1762 - event: wake (state=IDLE)
+2026-07-23 16:07:17.609 | INFO     | logging:callHandlers:1762 - state: IDLE -> LISTENING
+2026-07-23 16:07:18.530 | INFO     | logging:callHandlers:1762 - 🔔 Wake word detected — listening…
+2026-07-23 16:07:27.399 | INFO     | logging:callHandlers:1762 - event: timeout (state=LISTENING)
+2026-07-23 16:07:27.400 | INFO     | logging:callHandlers:1762 - state: LISTENING -> IDLE
+2026-07-23 16:07:27.400 | INFO     | logging:callHandlers:1762 - ⏰ No speech detected — back to IDLE
+2026-07-23 16:16:58.614 | INFO     | logging:callHandlers:1762 - wake fired (score=0.34 thr=0.25)
+2026-07-23 16:16:58.615 | INFO     | logging:callHandlers:1762 - event: wake (state=IDLE)
+2026-07-23 16:16:58.617 | INFO     | logging:callHandlers:1762 - state: IDLE -> LISTENING
+2026-07-23 16:16:58.618 | INFO     | logging:callHandlers:1762 - 🔔 Wake word detected — listening…
+2026-07-23 16:17:07.559 | INFO     | logging:callHandlers:1762 - event: timeout (state=LISTENING)
+2026-07-23 16:17:07.560 | INFO     | logging:callHandlers:1762 - state: LISTENING -> IDLE
+2026-07-23 16:17:07.560 | INFO     | logging:callHandlers:1762 - ⏰ No speech detected — back to IDLE
+2026-07-23 16:25:53.666 | INFO     | logging:callHandlers:1762 - wake fired (score=0.35 thr=0.25)
+2026-07-23 16:25:53.668 | INFO     | logging:callHandlers:1762 - event: wake (state=IDLE)
+2026-07-23 16:25:53.668 | INFO     | logging:callHandlers:1762 - state: IDLE -> LISTENING
+2026-07-23 16:25:53.669 | INFO     | logging:callHandlers:1762 - 🔔 Wake word detected — listening…
+2026-07-23 16:26:02.588 | INFO     | logging:callHandlers:1762 - event: timeout (state=LISTENING)
+2026-07-23 16:26:02.589 | INFO     | logging:callHandlers:1762 - state: LISTENING -> IDLE
+2026-07-23 16:26:02.590 | INFO     | logging:callHandlers:1762 - ⏰ No speech detected — back to IDLE
+2026-07-23 16:29:33.401 | INFO     | logging:callHandlers:1762 - KeyboardInterrupt — shutting down pipeline
+2026-07-23 16:29:33.516 | INFO     | logging:callHandlers:1762 - Audio loop exited
+2026-07-23 16:29:33.517 | INFO     | logging:callHandlers:1762 - Pipeline stopped
+2026-07-23 16:45:26.699 | INFO     | logging:callHandlers:1762 - Starting Antigravity Voice Assistant...
+2026-07-23 16:45:26.712 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-23 16:45:31.420 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-23 16:45:31.421 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-23 16:45:32.766 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-23 16:45:32.767 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-23 16:45:32.806 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from E:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 16:45:32.808 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-23 16:45:32.828 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-23 16:45:33.315 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 16:45:33.316 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-23 16:45:33.433 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 16:45:33.435 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 16:45:33.657 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 16:45:33.658 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-23 16:45:33.659 | INFO     | logging:callHandlers:1762 - Initializing Audio Pipeline (Wake -> VAD)...
+2026-07-23 16:45:38.467 | INFO     | logging:callHandlers:1762 - Pipeline started. Wake word detection is ENABLED.
+2026-07-23 16:45:38.468 | INFO     | logging:callHandlers:1762 - Pipeline starting…
+2026-07-23 16:45:38.470 | INFO     | logging:callHandlers:1762 - Audio loop started (wake=ON)
+2026-07-23 16:45:38.471 | INFO     | logging:callHandlers:1762 - Main loop started — waiting for events
+2026-07-23 16:45:38.798 | INFO     | logging:callHandlers:1762 - mic open: device=None rate=16000
+2026-07-23 16:59:28.509 | INFO     | logging:callHandlers:1762 - wake fired (score=0.28 thr=0.25)
+2026-07-23 16:59:28.510 | INFO     | logging:callHandlers:1762 - event: wake (state=IDLE)
+2026-07-23 16:59:28.511 | INFO     | logging:callHandlers:1762 - state: IDLE -> LISTENING
+2026-07-23 16:59:29.437 | INFO     | logging:callHandlers:1762 - 🔔 Wake word detected — listening…
+2026-07-23 16:59:38.346 | INFO     | logging:callHandlers:1762 - event: timeout (state=LISTENING)
+2026-07-23 16:59:38.348 | INFO     | logging:callHandlers:1762 - state: LISTENING -> IDLE
+2026-07-23 16:59:38.348 | INFO     | logging:callHandlers:1762 - ⏰ No speech detected — back to IDLE
+2026-07-23 17:17:15.317 | INFO     | logging:callHandlers:1762 - wake fired (score=0.39 thr=0.25)
+2026-07-23 17:17:15.319 | INFO     | logging:callHandlers:1762 - event: wake (state=IDLE)
+2026-07-23 17:17:15.320 | INFO     | logging:callHandlers:1762 - state: IDLE -> LISTENING
+2026-07-23 17:17:15.321 | INFO     | logging:callHandlers:1762 - 🔔 Wake word detected — listening…
+2026-07-23 17:17:24.268 | INFO     | logging:callHandlers:1762 - event: timeout (state=LISTENING)
+2026-07-23 17:17:24.269 | INFO     | logging:callHandlers:1762 - state: LISTENING -> IDLE
+2026-07-23 17:17:24.270 | INFO     | logging:callHandlers:1762 - ⏰ No speech detected — back to IDLE
+2026-07-23 17:31:22.199 | INFO     | logging:callHandlers:1762 - wake fired (score=0.42 thr=0.25)
+2026-07-23 17:31:22.201 | INFO     | logging:callHandlers:1762 - event: wake (state=IDLE)
+2026-07-23 17:31:22.201 | INFO     | logging:callHandlers:1762 - state: IDLE -> LISTENING
+2026-07-23 17:31:22.203 | INFO     | logging:callHandlers:1762 - 🔔 Wake word detected — listening…
+2026-07-23 17:31:31.139 | INFO     | logging:callHandlers:1762 - event: timeout (state=LISTENING)
+2026-07-23 17:31:31.139 | INFO     | logging:callHandlers:1762 - state: LISTENING -> IDLE
+2026-07-23 17:31:31.140 | INFO     | logging:callHandlers:1762 - ⏰ No speech detected — back to IDLE
+2026-07-23 17:40:54.035 | INFO     | logging:callHandlers:1762 - wake fired (score=0.72 thr=0.25)
+2026-07-23 17:40:54.036 | INFO     | logging:callHandlers:1762 - event: wake (state=IDLE)
+2026-07-23 17:40:54.037 | INFO     | logging:callHandlers:1762 - state: IDLE -> LISTENING
+2026-07-23 17:40:54.038 | INFO     | logging:callHandlers:1762 - 🔔 Wake word detected — listening…
+2026-07-23 17:41:02.989 | INFO     | logging:callHandlers:1762 - event: timeout (state=LISTENING)
+2026-07-23 17:41:02.989 | INFO     | logging:callHandlers:1762 - state: LISTENING -> IDLE
+2026-07-23 17:41:02.990 | INFO     | logging:callHandlers:1762 - ⏰ No speech detected — back to IDLE
+2026-07-23 18:32:56.444 | INFO     | logging:callHandlers:1762 - KeyboardInterrupt — shutting down pipeline
+2026-07-23 18:32:56.580 | INFO     | logging:callHandlers:1762 - Audio loop exited
+2026-07-23 18:32:56.584 | INFO     | logging:callHandlers:1762 - Pipeline stopped
+2026-07-23 18:33:24.530 | INFO     | logging:callHandlers:1762 - Starting Antigravity Voice Assistant...
+2026-07-23 18:33:24.535 | INFO     | logging:callHandlers:1762 - Loading STT model…
+2026-07-23 18:33:29.291 | INFO     | logging:callHandlers:1762 - Initializing Transcriber with model: WhisperModel.BASE, device: cpu
+2026-07-23 18:33:29.291 | INFO     | logging:callHandlers:1762 - Loading Whisper model: base
+2026-07-23 18:33:30.577 | INFO     | logging:callHandlers:1762 - Model base loaded successfully on device: cpu
+2026-07-23 18:33:30.578 | INFO     | logging:callHandlers:1762 - Loading NLU engine…
+2026-07-23 18:33:30.613 | INFO     | logging:callHandlers:1762 - Loaded 37 intent definitions from e:\Student\Project in Python\ASR\src\nlu\models\intents
+2026-07-23 18:33:30.615 | INFO     | logging:callHandlers:1762 - Loading Task Executor…
+2026-07-23 18:33:30.627 | INFO     | logging:callHandlers:1762 - Connecting to LLM…
+2026-07-23 18:33:30.910 | INFO     | logging:callHandlers:1762 - LLMConnector initialized. Model: gemma4:e2b-it-qat, URL: http://localhost:11434
+2026-07-23 18:33:30.910 | INFO     | logging:callHandlers:1762 - Loading TTS engine…
+2026-07-23 18:33:31.011 | INFO     | logging:callHandlers:1762 - Imported existing <module 'comtypes.gen' from 'C:\\Users\\dynam\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\comtypes\\gen\\__init__.py'>
+2026-07-23 18:33:31.011 | INFO     | logging:callHandlers:1762 - Using writeable comtypes cache directory: 'C:\Users\dynam\AppData\Local\Programs\Python\Python312\Lib\site-packages\comtypes\gen'
+2026-07-23 18:33:31.260 | INFO     | logging:callHandlers:1762 - TTS engine initialised (pyttsx3)
+2026-07-23 18:33:31.260 | INFO     | logging:callHandlers:1762 - Brain initialization complete! All systems go.
+2026-07-23 18:33:31.261 | INFO     | logging:callHandlers:1762 - Initializing Audio Pipeline (Wake -> VAD)...
+2026-07-23 18:33:34.831 | INFO     | logging:callHandlers:1762 - Pipeline started. Wake word detection is ENABLED.
+2026-07-23 18:33:34.832 | INFO     | logging:callHandlers:1762 - Pipeline starting…
+2026-07-23 18:33:34.834 | INFO     | logging:callHandlers:1762 - Audio loop started (wake=ON)
+2026-07-23 18:33:34.835 | INFO     | logging:callHandlers:1762 - Main loop started — waiting for events
+2026-07-23 18:33:35.033 | INFO     | logging:callHandlers:1762 - mic open: device=None rate=16000

@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "description": "NLU configuration for the ASR Voice Assistant",
+
+  "thresholds": {
+    "confidence_min": 0.45,
+    "ambiguity_gap": 0.15,
+    "entity_confidence_min": 0.40
+  },
+
+  "enabled_intents": [
+    "greeting",
+    "farewell",
+    "help",
+    "thank_you",
+    "affirm",
+    "deny",
+    "chitchat",
+    "get_weather",
+    "get_forecast",
+    "play_music",
+    "stop_music",
+    "pause_music",
+    "resume_music",
+    "next_track",
+    "previous_track",
+    "volume_up",
+    "volume_down",
+    "set_volume",
+    "set_timer",
+    "cancel_timer",
+    "check_timer",
+    "set_alarm",
+    "cancel_alarm",
+    "set_reminder",
+    "get_time",
+    "get_date",
+    "device_on",
+    "device_off",
+    "device_status",
+    "search_web",
+    "tell_joke",
+    "get_news",
+    "take_note",
+    "read_notes",
+    "system_status",
+    "system_shutdown",
+    "system_restart"
+  ],
+
+  "fallback_intent": "chitchat",
+
+  "preprocessing": {
+    "lowercase": true,
+    "strip_punctuation": true,
+    "remove_filler_words": true,
+    "filler_words": [
+      "um", "uh", "er", "ah", "like", "you know", "so", "well",
+      "basically", "actually", "literally", "honestly", "right"
+    ]
+  },
+
+  "entity_extraction": {
+    "use_regex_patterns": true,
+    "use_keyword_lookup": true,
+    "merge_overlapping": true
+  },
+
+  "intent_priority": {
+    "device_on": 10,
+    "device_off": 10,
+    "set_timer": 9,
+    "set_alarm": 9,
+    "set_reminder": 9,
+    "play_music": 8,
+    "stop_music": 8,
+    "get_weather": 7,
+    "system_shutdown": 6,
+    "system_restart": 6
+  }
+}
